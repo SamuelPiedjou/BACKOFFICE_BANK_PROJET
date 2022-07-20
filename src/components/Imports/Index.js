@@ -94,6 +94,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import LockOpen from "@material-ui/icons/LockOpen";
 import Lock from "@material-ui/icons/Lock";
+import BankBal from "@material-ui/icons/AccountBalance"
 import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import Avatar from "@material-ui/core/Avatar";
@@ -131,6 +132,7 @@ export {
   Snackbar,
   background,
   logo,
+  BankBal,
   Copyright,
   Loader,
   MainListItems,

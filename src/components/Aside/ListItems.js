@@ -1,15 +1,15 @@
 /**
-    * @description      : 
-    * @author           : HP
-    * @group            : 
-    * @created          : 11/11/2021 - 16:29:08
-    * 
-    * MODIFICATION LOG
-    * - Version         : 1.0.0
-    * - Date            : 11/11/2021
-    * - Author          : HP
-    * - Modification    : 
-**/
+ * @description      :
+ * @author           : HP
+ * @group            :
+ * @created          : 11/11/2021 - 16:29:08
+ *
+ * MODIFICATION LOG
+ * - Version         : 1.0.0
+ * - Date            : 11/11/2021
+ * - Author          : HP
+ * - Modification    :
+ **/
 import React from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -21,6 +21,9 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
 import List from "@material-ui/core/List";
 import PeopleIcon from "@material-ui/icons/People";
+import AccountBalance from "@material-ui/icons/AccountBalance";
+import AccountBalanceOutlined from "@material-ui/icons/AccountBalanceOutlined";
+import AccountTree from "@material-ui/icons/AccountTree";
 import Tooltip from "@material-ui/core/Tooltip";
 import Link from "@material-ui/core/Link";
 
@@ -33,6 +36,7 @@ export function MainListItems() {
   const [openPolicy, setOpenPolicy] = React.useState(false);
   const [openOrders, setOpenOrders] = React.useState(false);
   const [openCategories, setOpenCategories] = React.useState(false);
+  const [openClients, setOpenClient] = React.useState(false);
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,11 +58,11 @@ export function MainListItems() {
   const handleUsersClick = () => {
     setOpenUsers(!openUsers);
   };
-  const handleOrdersClick=()=>{
+  const handleOrdersClick = () => {
     setOpenOrders(!openOrders);
   };
 
-  const handleCategorysClick=()=>{
+  const handleCategorysClick = () => {
     setOpenCategories(!openCategories);
   };
 
@@ -74,8 +78,8 @@ export function MainListItems() {
     setOpenComments(!openComments);
   };
 
-  const handlePolicyClick = () => {
-    setOpenPolicy(!openPolicy);
+  const handleClientClisk = () => {
+    setOpenClient(!openClients);
   };
 
   return (
@@ -84,7 +88,7 @@ export function MainListItems() {
         <ListItem button>
           <ListItemIcon>
             <Tooltip title="Menu Tableau De Bord">
-              <DashboardIcon color='primary' style={{color: '#FF5C03'}}/>
+              <DashboardIcon color="primary" style={{ color: "#FF5C03" }} />
             </Tooltip>
           </ListItemIcon>
           <ListItemText primary="Tableau De Bord" />
@@ -94,7 +98,7 @@ export function MainListItems() {
       <ListItem button onClick={handleCategorysClick}>
         <ListItemIcon>
           <Tooltip title="GESTION DES CLIENTS">
-            <PeopleIcon color="primary" style={{color: '#FF5C03'}}/>
+            <PeopleIcon color="primary" style={{ color: "#FF5C03" }} />
           </Tooltip>
         </ListItemIcon>
         <ListItemText primary="GESTION DES CLIENTS" />
@@ -102,32 +106,84 @@ export function MainListItems() {
       </ListItem>
       <Collapse in={openCategories} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <Link color="inherit" href="/clients">
+          <Link color="inherit" href="/clients/nonAct">
             <ListItem button className={classes.nested}>
               <ListItemIcon>
-                <Tooltip title="Liste des clients">
-                  <PeopleIcon color="primary" style={{color: '#FF5C03'}}/>
+                <Tooltip title="Liste des clients non abonnés">
+                  <PeopleIcon color="primary" style={{ color: "#FF5C03" }} />
                 </Tooltip>
               </ListItemIcon>
-              <ListItemText primary="Liste des clients" />
+              <ListItemText primary="Liste des clients non abonnés" />
             </ListItem>
           </Link>
         </List>
       </Collapse>
       <Collapse in={openCategories} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <Link color="inherit" href="/clients/newClients">
+          <Link color="inherit" href="/clients/act">
             <ListItem button className={classes.nested}>
               <ListItemIcon>
-                <Tooltip title="Liste des Menu">
-                  <PeopleIcon color="primary" style={{color: '#FF5C03'}}/>
+                <Tooltip title="Liste des clients abonnés">
+                  <PeopleIcon color="primary" style={{ color: "#FF5C03" }} />
                 </Tooltip>
               </ListItemIcon>
-              <ListItemText primary="Liste des Clients" />
+              <ListItemText primary="Liste des Clients abonnés" />
             </ListItem>
           </Link>
         </List>
-      </Collapse> 
+      </Collapse>
+
+      <ListItem button onClick={handleClientClisk}>
+        <ListItemIcon>
+          <Tooltip title="GESTION DES COMPTES">
+            <AccountBalance color="primary" style={{ color: "#FF5C03" }} />
+          </Tooltip>
+        </ListItemIcon>
+        <ListItemText primary="GESTION DES COMPTES" />
+        {openCategories ? <ExpandLess /> : <ExpandMore />}
+      </ListItem>
+      <Collapse in={openClients} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <Link color="inherit" href="/comptes">
+            <ListItem button className={classes.nested}>
+              <ListItemIcon>
+                <Tooltip title="Liste des COMPTES ">
+                  <AccountBalance color="primary" style={{ color: "#FF5C03" }} />
+                </Tooltip>
+              </ListItemIcon>
+              <ListItemText primary="Liste des COMPTES" />
+            </ListItem>
+          </Link>
+        </List>
+      </Collapse>
+      <Collapse in={openClients} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <Link color="inherit" href="/comptes/activated">
+            <ListItem button className={classes.nested}>
+              <ListItemIcon>
+                <Tooltip title="Liste des comptes activés">
+                  <AccountBalanceOutlined color="primary" style={{ color: "#FF5C03" }} />
+                </Tooltip>
+              </ListItemIcon>
+              <ListItemText primary="Liste des comptes activés" />
+            </ListItem>
+          </Link>
+        </List>
+      </Collapse>
+      <Collapse in={openClients} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <Link color="inherit" href="/comptes/suspended">
+            <ListItem button className={classes.nested}>
+              <ListItemIcon>
+                <Tooltip title="Liste des comptes suspendu">
+                  <AccountTree color="primary" style={{ color: "#FF5C03" }} />
+                </Tooltip>
+              </ListItemIcon>
+              <ListItemText primary="Liste des comptes suspendu" />
+            </ListItem>
+          </Link>
+        </List>
+      </Collapse>
     </div>
   );
 }

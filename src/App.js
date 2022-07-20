@@ -33,6 +33,11 @@ import AuthService from "./services/Auth.js";
 import DashboardService from "./services/Dashboard.js";
 import UsersService from "./services/Users.js";
 import BookingsService from "./services/Bookings.js";
+import Account from "./pages/Account/Account";
+import AccountSusp from "./pages/Account/AccountSusp";
+import AccountAct from "./pages/Account/AccountAct";
+import ClientNot from "./pages/Bookings/clientNot";
+import ClientOk from "./pages/Bookings/clientOk";
 
 const THEME = createMuiTheme({
   typography: {
@@ -66,17 +71,38 @@ export default function App() {
                 <Dashboard {...props} dashboard={DashboardService} bookings={BookingsService}/>
               )}
             />
-           
-            <Route
-              exact
-              path="/new-user"
-              render={(props) => <NewUser {...props} users={UsersService} />}
-            />
             <Route
               exact
               path="/clients"
               render={(props) => <Bookings {...props} bookings={BookingsService} />}
             />
+            <Route
+              exact
+              path="/clients/nonAct"
+              render={(props) => <ClientNot {...props} bookings={BookingsService} />}
+            />
+            <Route
+              exact
+              path="/clients/act"
+              render={(props) => <ClientOk {...props} bookings={BookingsService} />}
+            />
+            <Route
+              exact
+              path="/comptes"
+              render={(props) => <Account {...props} bookings={BookingsService} />}
+            />
+            <Route
+              exact
+              path="/comptes/activated"
+              render={(props) => <AccountAct {...props} bookings={BookingsService} />}
+            />
+            <Route
+              exact
+              path="/comptes/suspended"
+              render={(props) => <AccountSusp {...props} bookings={BookingsService} />}
+            />
+            
+            
           </Switch>
         </div>
       </Router>

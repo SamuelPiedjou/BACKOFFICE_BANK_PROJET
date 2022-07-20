@@ -14,7 +14,7 @@ import * as Modules from "../../components/Imports/Index";
 import { useStylesTheme } from "../../styles/Style";
 import AssuredWorkloadIcon from '@material-ui/icons/BrandingWatermark';
 
-export default function Bookings(props) {
+export default function ClientOk(props) {
   const classes = useStylesTheme();
   const [open, setOpen] = Modules.React.useState(true);
   const [openAlert, setOpenAlert] = Modules.React.useState(false);
@@ -140,7 +140,7 @@ export default function Bookings(props) {
               <Modules.Paper className={classes.paper} elevation={10}>
                 <Modules.PeopleIcon color="primary" />
                 <Modules.Typography variant="h6">
-                  LISTE DES CLIENTS
+                  LISTE DES AYANT UN COMPTE
                 </Modules.Typography>
               </Modules.Paper>
             </Modules.Grid>

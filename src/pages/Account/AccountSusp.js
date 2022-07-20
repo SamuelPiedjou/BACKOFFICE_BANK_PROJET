@@ -14,7 +14,7 @@ import * as Modules from "../../components/Imports/Index";
 import { useStylesTheme } from "../../styles/Style";
 import AssuredWorkloadIcon from '@material-ui/icons/BrandingWatermark';
 
-export default function Bookings(props) {
+export default function AccountSusp(props) {
   const classes = useStylesTheme();
   const [open, setOpen] = Modules.React.useState(true);
   const [openAlert, setOpenAlert] = Modules.React.useState(false);
@@ -97,7 +97,7 @@ export default function Bookings(props) {
             noWrap
             className={classes.title}
           >
-            GESTIONS DES CLIENTS
+            GESTIONS DES COMPTES
           </Modules.Typography>
           {/*  <Modules.IconButton color="inherit">
             <Modules.Badge badgeContent={4} color="secondary">
@@ -138,9 +138,9 @@ export default function Bookings(props) {
           <Modules.Grid container spacing={3}>
             <Modules.Grid item xs={12}>
               <Modules.Paper className={classes.paper} elevation={10}>
-                <Modules.PeopleIcon color="primary" />
+                <Modules.BankBal color="primary" />
                 <Modules.Typography variant="h6">
-                  LISTE DES CLIENTS
+                  LISTE DES COMPTES
                 </Modules.Typography>
               </Modules.Paper>
             </Modules.Grid>
@@ -162,39 +162,39 @@ export default function Bookings(props) {
                           color: "#fff",
                         }}
                       >
-                        {"NOM"}
-                      </Modules.TableCell>
-                      <Modules.TableCell
-                        style={{
-                          backgroundColor: "blue",
-                          color: "#fff",
-                        }}
-                      >
-                        {" EMAIL"}
-                      </Modules.TableCell>
-                      <Modules.TableCell
-                        style={{
-                          backgroundColor: "blue",
-                          color: "#fff",
-                        }}
-                      >
-                        {"DATE DE SOUSCRIPTION"}
-                      </Modules.TableCell>
-                      <Modules.TableCell
-                        style={{
-                          backgroundColor: "blue",
-                          color: "#fff",
-                        }}
-                      >
-                        {"N°PHONE"}
-                      </Modules.TableCell>
-                      <Modules.TableCell
-                        style={{
-                          backgroundColor: "blue",
-                          color: "#fff",
-                        }}
-                      >
                         {"N°COMPTE"}
+                      </Modules.TableCell>
+                      <Modules.TableCell
+                        style={{
+                          backgroundColor: "blue",
+                          color: "#fff",
+                        }}
+                      >
+                        {" SOLDE"}
+                      </Modules.TableCell>
+                      <Modules.TableCell
+                        style={{
+                          backgroundColor: "blue",
+                          color: "#fff",
+                        }}
+                      >
+                        {"DATE DE LE"}
+                      </Modules.TableCell>
+                      <Modules.TableCell
+                        style={{
+                          backgroundColor: "blue",
+                          color: "#fff",
+                        }}
+                      >
+                        {"STATUS DU COMPTE"}
+                      </Modules.TableCell>
+                      <Modules.TableCell
+                        style={{
+                          backgroundColor: "blue",
+                          color: "#fff",
+                        }}
+                      >
+                        {"TYPE DE COMPTE"}
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
@@ -205,6 +205,15 @@ export default function Bookings(props) {
                         colSpan={2}
                       >
                         {"ACTION"}
+                      </Modules.TableCell>
+                      <Modules.TableCell
+                        style={{
+                          backgroundColor: "blue",
+                          color: "#fff",
+                        }}
+                        align="center"
+                        colSpan={2}
+                      >
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
@@ -257,6 +266,14 @@ export default function Bookings(props) {
                                     setDetails(row);
                                     setOpenAlert(!openAlert);
                                   }}
+                                />
+                              </Modules.Tooltip>
+                            </Modules.TableCell>
+                            <Modules.TableCell align="center">
+                              <Modules.Tooltip title="Activer/désactiver">
+                                <Modules.LockIcon
+                                  color="primary"
+                                  onClick={() => { }}
                                 />
                               </Modules.Tooltip>
                             </Modules.TableCell>

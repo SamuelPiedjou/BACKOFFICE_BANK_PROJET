@@ -2,7 +2,7 @@
     * @description      : 
     * @author           : HP
     * @group            : 
-    * @created          : 30/08/2021 - 12:42:57
+    * @created          : 30/08/2021 - 12:46:16
     * 
     * MODIFICATION LOG
     * - Version         : 1.0.0
@@ -12,9 +12,8 @@
 **/
 import * as Modules from "../../components/Imports/Index";
 import { useStylesTheme } from "../../styles/Style";
-import AssuredWorkloadIcon from '@material-ui/icons/BrandingWatermark';
 
-export default function Bookings(props) {
+export default function CurrentAccount(props) {
   const classes = useStylesTheme();
   const [open, setOpen] = Modules.React.useState(true);
   const [openAlert, setOpenAlert] = Modules.React.useState(false);
@@ -22,17 +21,20 @@ export default function Bookings(props) {
   const [showError, setShowError] = Modules.React.useState(false);
   const [errorMessage, setErrorMessage] = Modules.React.useState();
   const [loading, setLoading] = Modules.React.useState(false);
-  const [customerData, setcustomerData] = Modules.React.useState();
+  const [usersData, setUsersData] = Modules.React.useState();
+  const [user, setUser] = Modules.React.useState();
+
+  const [bookingsData, setBookingsData] = Modules.React.useState([]);
   const [page, setPage] = Modules.React.useState(0);
   const [rowsPerPage, setRowsPerPage] = Modules.React.useState(10);
   const [details, setDetails] = Modules.React.useState("");
 
   Modules.React.useEffect(async () => {
     try {
-      const bookingsService = new props.bookings();
-      const customerData = await bookingsService.getBookings();
-      //console.log(JSON.stringify(customerData));
-      setcustomerData(customerData);
+      const usersService = new props.users();
+      const usersData = await usersService.getUsers();
+      //console.log(JSON.stringify(usersData));
+      setUsersData(usersData);
       setShowLoader(false);
     } catch (errors) {
       //console.log(JSON.stringify(errors.name));
@@ -57,6 +59,28 @@ export default function Bookings(props) {
 
   const NewComponent = Modules.MainListItems;
 
+  const history = Modules.useHistory();
+  const handleSubmit = async (e) => {
+    setLoading(true);
+    try {
+      e.preventDefault();
+      const bookingsService = new props.bookings();
+      const bookingsData = await bookingsService.searchBookings({
+        user,
+      });
+      setLoading(false);
+      //console.log(JSON.stringify(salePointsData))
+      setBookingsData(bookingsData);
+      setShowLoader(false);
+    } catch (errors) {
+      //console.log(JSON.stringify(errors));
+      if (errors.name) {
+        setErrorMessage(errors);
+        setShowError(true);
+      }
+    }
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -77,7 +101,7 @@ export default function Bookings(props) {
         position="absolute"
         className={Modules.clsx(classes.appBar, open && classes.appBarShift)}
       >
-        <Modules.Toolbar className={classes.toolbar} style={{ backgroundColor: 'blue' }}>
+        <Modules.Toolbar className={classes.toolbar}>
           <Modules.IconButton
             edge="start"
             color="inherit"
@@ -97,9 +121,9 @@ export default function Bookings(props) {
             noWrap
             className={classes.title}
           >
-            GESTIONS DES CLIENTS
+            RESERVATIONS PAR UTILISATEUR
           </Modules.Typography>
-          {/*  <Modules.IconButton color="inherit">
+          {/* <Modules.IconButton color="inherit">
             <Modules.Badge badgeContent={4} color="secondary">
               <Modules.NotificationsIcon />
             </Modules.Badge>
@@ -118,11 +142,14 @@ export default function Bookings(props) {
       >
         <div
           className={classes.toolbarIcon}
-          style={{ backgroundColor: "blue" }}
+          style={{ backgroundColor: "beige" }}
         >
-          <AssuredWorkloadIcon   style={{color: 'white'}}/>
-          <span>{   } </span>
-          <span style={{color:'white'}}>CELESTA BANK BACKOFFICE</span>
+          <img
+            src={Modules.logo}
+            alt="Logo"
+            style={{ width: 80, height: 80 }}
+          />
+          <span>AKENO BACKOFFICE</span>
           <Modules.IconButton onClick={handleDrawerClose}>
             <Modules.ChevronLeftIcon />
           </Modules.IconButton>
@@ -140,8 +167,60 @@ export default function Bookings(props) {
               <Modules.Paper className={classes.paper} elevation={10}>
                 <Modules.PeopleIcon color="primary" />
                 <Modules.Typography variant="h6">
-                  LISTE DES CLIENTS
+                  Recherche De Réservations
                 </Modules.Typography>
+              </Modules.Paper>
+            </Modules.Grid>
+            <Modules.Grid item xs={12}>
+              <Modules.Paper className={classes.paper} elevation={10}>
+                <form
+                  className={classes.form30}
+                  autoComplete="off"
+                  onSubmit={handleSubmit}
+                >
+                  <div>
+                    <Modules.FormControl
+                      variant="outlined"
+                      style={{
+                        width: "65%",
+                        marginTop: 8,
+                        marginLeft: 24,
+                        marginRight: 8,
+                      }}
+                      required
+                    >
+                      <Modules.InputLabel id="demo-simple-select-outlined-label">
+                        Utilisateur
+                      </Modules.InputLabel>
+                      <Modules.Select
+                        labelId="demo-simple-select-outlined-label11"
+                        id="user"
+                        value={user ? user : ""}
+                        label="Utilisateur"
+                        onChange={(e) => setUser(e.target.value)}
+                      >
+                        {usersData.map((row, key) => (
+                          <Modules.MenuItem value={row.id} key={key}>
+                            {row.user.lastName} {row.user.firstName}
+                          </Modules.MenuItem>
+                        ))}
+                      </Modules.Select>
+                    </Modules.FormControl>
+                    <Modules.Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      style={{ marginLeft: 24, marginTop: 8, height: 50 }}
+                      disabled={loading}
+                      startIcon={
+                        <Modules.SaveIcon style={{ color: "white" }} />
+                      }
+                    >
+                      Rechercher
+                    </Modules.Button>
+                    {loading && <Modules.Circular />}
+                  </div>
+                </form>
               </Modules.Paper>
             </Modules.Grid>
           </Modules.Grid>
@@ -158,71 +237,50 @@ export default function Bookings(props) {
                       <Modules.TableCell
                         style={{
                           minWidth: 170,
-                          backgroundColor: "blue",
+                          backgroundColor: "#3f51b5",
                           color: "#fff",
                         }}
                       >
-                        {"NOM"}
+                        {"VILLE"}
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
-                          backgroundColor: "blue",
+                          backgroundColor: "#3f51b5",
                           color: "#fff",
                         }}
                       >
-                        {" EMAIL"}
+                        {"UTILISATEUR"}
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
-                          backgroundColor: "blue",
+                          backgroundColor: "#3f51b5",
                           color: "#fff",
                         }}
                       >
-                        {"DATE DE SOUSCRIPTION"}
+                        {"CONTACT"}
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
-                          backgroundColor: "blue",
+                          backgroundColor: "#3f51b5",
                           color: "#fff",
                         }}
                       >
-                        {"N°PHONE"}
+                        {"DATE DE LIVRAISON"}
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
-                          backgroundColor: "blue",
-                          color: "#fff",
-                        }}
-                      >
-                        {"N°COMPTE"}
-                      </Modules.TableCell>
-                      <Modules.TableCell
-                        style={{
-                          backgroundColor: "blue",
+                          backgroundColor: "#3f51b5",
                           color: "#fff",
                         }}
                         align="center"
-                        colSpan={2}
                       >
                         {"ACTION"}
-                      </Modules.TableCell>
-                      <Modules.TableCell
-                        style={{
-                          backgroundColor: "blue",
-                          color: "#fff",
-                        }}
-                        align="center"
-                        colSpan={2}
-                      >
-                        
                       </Modules.TableCell>
                     </Modules.TableRow>
                   </Modules.TableHead>
                   <Modules.TableBody>
-                    {customerData
-                      .sort(function (s1, s2) {
-                        return s2.id - s1.id;
-                      }).slice(
+                    {bookingsData
+                      .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
@@ -235,19 +293,16 @@ export default function Bookings(props) {
                             key={key}
                           >
                             <Modules.TableCell>
-                                    {console.log("")}                   
+                              {row.salepoint.city.name}
                             </Modules.TableCell>
                             <Modules.TableCell>
-                              
+                              {row.userExtra ? row.userExtra.user.lastName : ""}
                             </Modules.TableCell>
                             <Modules.TableCell>
-                              
+                              {row.userExtra ? row.userExtra.user.login : ""}
                             </Modules.TableCell>
                             <Modules.TableCell>
-                               
-                            </Modules.TableCell>
-                            <Modules.TableCell>
-                              
+                              {row.dateDelivery}
                             </Modules.TableCell>
                             <Modules.TableCell align="center">
                               <Modules.Tooltip title="Visualiser">
@@ -260,24 +315,6 @@ export default function Bookings(props) {
                                 />
                               </Modules.Tooltip>
                             </Modules.TableCell>
-                            <Modules.TableCell>
-                      <Modules.Tooltip title="Editer">
-                        <Modules.Link
-                          color="inherit"
-                          href="/update-booking"
-                          onClick={() => {
-                            localStorage.setItem(
-                              "bookingDetails",
-                              JSON.stringify(row)
-                            );
-                          }}
-                        >
-                          <Modules.EditIcon
-                            style={{ color: "darkturquoise" }}
-                          />
-                        </Modules.Link>
-                      </Modules.Tooltip>
-                    </Modules.TableCell>
                           </Modules.TableRow>
                         );
                       })}
@@ -286,7 +323,7 @@ export default function Bookings(props) {
               </Modules.TableContainer>
               <Modules.ViewDialog
                 {...props}
-                title="Details Info clients"
+                title="Visualisation De La Réservation"
                 operation="bookings"
                 open={openAlert}
                 onClose={handleDialogClose}
@@ -295,7 +332,7 @@ export default function Bookings(props) {
               <Modules.TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={customerData.length}
+                count={bookingsData.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
