@@ -92,6 +92,8 @@ import ErrorIcon from "@material-ui/icons/Error";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import LockOpen from "@material-ui/icons/LockOpen";
+import Lock from "@material-ui/icons/Lock";
 import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import Avatar from "@material-ui/core/Avatar";

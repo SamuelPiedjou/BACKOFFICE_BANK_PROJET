@@ -30,10 +30,10 @@ export default function Bookings(props) {
   Modules.React.useEffect(async () => {
     try {
       const bookingsService = new props.bookings();
-      const customerDatas = await bookingsService.getBookings(); 
+      const customerData = await bookingsService.getBookings();
+      //console.log(JSON.stringify(customerData));
+      setcustomerData(customerData);
       setShowLoader(false);
-      console.log(JSON.stringify(customerData));
-      setcustomerData(JSON.stringify(customerDatas));
     } catch (errors) {
       //console.log(JSON.stringify(errors.name));
       if (errors.name == "Error") {
@@ -42,7 +42,7 @@ export default function Bookings(props) {
       }
     }
   }, []);
- 
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -209,9 +209,7 @@ export default function Bookings(props) {
                     </Modules.TableRow>
                   </Modules.TableHead>
                   <Modules.TableBody>
-                  { console.log(customerData)} 
-                  { customerData.map((row, key)=>{ <div>{row.customerName} </div>})} 
-                    {/* {customerData
+                    {customerData
                       .sort(function (s1, s2) {
                         return s2.id - s1.id;
                       }).slice(
@@ -227,8 +225,7 @@ export default function Bookings(props) {
                             key={key}
                           >
                             <Modules.TableCell>
-                                    {console.log("DATA"+customerData)}    
-                                                  
+                                    {console.log("")}                   
                             </Modules.TableCell>
                             <Modules.TableCell>
                               
@@ -253,6 +250,16 @@ export default function Bookings(props) {
                                 />
                               </Modules.Tooltip>
                             </Modules.TableCell>
+                            <Modules.TableCell align="center">
+                              <Modules.Tooltip title="Visualiser">
+                                <Modules.LockOpenIcon
+                                  color="primary"
+                                  onClick={() => {
+                                     
+                                  }}
+                                />
+                              </Modules.Tooltip>
+                            </Modules.TableCell>
                             <Modules.TableCell>
                       <Modules.Tooltip title="Editer">
                         <Modules.Link
@@ -273,7 +280,7 @@ export default function Bookings(props) {
                     </Modules.TableCell>
                           </Modules.TableRow>
                         );
-                      })} */}
+                      })}
                   </Modules.TableBody>
                 </Modules.Table>
               </Modules.TableContainer>

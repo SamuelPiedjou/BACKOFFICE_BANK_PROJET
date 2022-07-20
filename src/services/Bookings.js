@@ -14,29 +14,10 @@ import Axios from "axios";
 import config from '../config/Index';
 
 export default class BookingsService {
-  // async getBookings() {
-  //   try {
-  //     const response = await Axios.get(
-  //       `${config.apiUrl}/bookings`,
-  //       {
-  //         headers: {
-  //           Accept: "application/json",
-  //           "Content-Type": "application/json",
-  //           Authorization: localStorage.getItem("token"),
-  //         },
-  //       }
-  //     );
-  //     //console.log(response)
-  //     return response.data;
-  //   } catch (error) {
-  //     //console.log(JSON.stringify(error))
-  //     return Promise.reject(error);
-  //   }
-  // }
   async getBookings() {
     try {
       const response = await Axios.get(
-        `http://192.168.0.148:8086/customer/allCustDetails`,
+        `${config.apiUrl}/bookings`,
         {
           headers: {
             Accept: "application/json",
