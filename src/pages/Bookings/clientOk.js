@@ -287,7 +287,7 @@ export default function ClientOk(props) {
               <Modules.ViewDialog
                 {...props}
                 title="Details Info clients"
-                operation="bookings"
+                operation="Clients"
                 open={openAlert}
                 onClose={handleDialogClose}
                 details={details}

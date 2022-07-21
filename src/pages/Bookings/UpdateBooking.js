@@ -220,7 +220,7 @@ export default function UpdateBooking(props) {
                         <Modules.SaveIcon style={{ color: "white" }} />
                       }
                     >
-                      Enregistrer
+                      Enregistrer COMPTE COURANT
                     </Modules.Button>
                     {loading && <Modules.Circular />}
                   </div>
@@ -230,7 +230,7 @@ export default function UpdateBooking(props) {
           </Modules.Grid>
           <Modules.DialogComponent
             {...props}
-            title="Confirmation D'Enregistrement Du Type De Partenaire"
+            title="Ajout compte COURANT"
             message="Vous êtes sur le point d'enregister les informations du type de partenaire saisies
             dans le formulaire. Voulez-vous vraiment continuer le processus d'enregistrement
             ?"

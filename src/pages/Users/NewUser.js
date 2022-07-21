@@ -189,7 +189,7 @@ export default function NewUser(props) {
               <Modules.Paper className={classes.paper} elevation={10}>
                 <Modules.PeopleIcon color="primary" />
                 <Modules.Typography variant="h6">
-                  Nouveau Motoman
+                  AJOUTER COMPTE COURANT
                 </Modules.Typography>
               </Modules.Paper>
             </Modules.Grid>
