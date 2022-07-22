@@ -36,12 +36,15 @@ export default function NewTransaction(props) {
   const [reason, setReason] = Modules.React.useState();
 
   const [openSnackbar, setOpenSnackbar] = Modules.React.useState(false);
+  const [openBalanceInsuf, setOpenBalanceInsuf] = Modules.React.useState(false);
 
   const apiurl = "http://192.168.0.148:8086/accounts";
 
   const choice = accountType === "RETRAIT" ? "withdraw" : "deposit";
 
- console.log(accountType)
+ console.log("N°COMPTE SENDER   "+accountId)
+ console.log("N°COMPTE BENEF  "+accountIdBenef)
+ console.log("BALANCE   "+balance)
   async function newTransaction(data) {
     try {
       const response = await Axios.post(
@@ -71,7 +74,7 @@ export default function NewTransaction(props) {
         `http://192.168.0.148:8086/accounts/transfer`,
         {
           amount: data.amount,
-          receiver: data.receiver,
+          receiver: data.accountIdBenef,
           sender: data.accountId,
         },
         {
@@ -134,8 +137,11 @@ export default function NewTransaction(props) {
         accountId
       });
       setLoading(false);
-      console.log(usersData.transactionStatus);
-
+      console.log(usersData[0].transactionStatus);
+      if(usersData[0].transactionStatus ==="FAILED"){
+        setOpenBalanceInsuf(true);
+          
+      }
       console.log("_______________________");
       console.log(usersData.transactionStatus);
       if (usersData.transactionStatus === "SUCCESSFUL") {
@@ -336,7 +342,7 @@ export default function NewTransaction(props) {
                         id="outlined-basic"
                         label="N° COMPTE BANCAIRE EXPEDITEUR"
                         variant="outlined"
-                        name="ID"
+                        name="BI"
                         required
                         // type="password"
                         onChange={(e) => setAccountIdBenef(e.target.value)}
@@ -346,7 +352,7 @@ export default function NewTransaction(props) {
                         id="outlined-basic"
                         label="MONTANT"
                         variant="outlined"
-                        name="RAISON"
+                        name="MNT"
                         required
                         // type="password"
                         onChange={(e) => setBalance(e.target.value)}
@@ -450,6 +456,12 @@ export default function NewTransaction(props) {
                 title="Titre"
                 message="OPERATION AFFECTUE"
                 open={openSnackbar}
+              />
+              <Modules.SnackbarComponent
+                {...props}
+                title="Titre"
+                message="SOLDE INSUFFISANT"
+                open={openBalanceInsuf}
               />
               <Modules.ViewDialog
                 {...props}
