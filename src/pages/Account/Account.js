@@ -15,6 +15,8 @@ import { useStylesTheme } from "../../styles/Style";
 import AssuredWorkloadIcon from "@material-ui/icons/BrandingWatermark";
 import Axios from "axios";
 import usersService from "../../services/Users";
+import { CSVLink } from "react-csv";
+import FileCopyOutlined from "@material-ui/icons/FileCopyOutlined";
 
 export default function Account(props) {
   const classes = useStylesTheme();
@@ -43,7 +45,6 @@ export default function Account(props) {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token"),
           },
         }
       );
@@ -101,7 +102,20 @@ export default function Account(props) {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  const headers = [
+    { label: "N°COMPTE", key: "accountId" },
+    { label: "SOLDE", key: "balance" },
+    { label: "DATE DE", key: "accountId" },
+    { label: "STATUS DU COMPTE", key: "accountId" },
+    { label: "TYPE DE COMPTE", key: "accountId" },
+    { label: "N°COMPTE", key: "accountId" },
+  ];
 
+  const csvReport = {
+    filname: " LISTE_DES_COMPTES.csv",
+    headers: headers,
+    data: accountData,
+  };
   return showLoader == true ? (
     <Modules.Loader />
   ) : showError == true ? (
@@ -181,17 +195,43 @@ export default function Account(props) {
                 <Modules.Typography variant="h6">
                   LISTE DES COMPTES
                 </Modules.Typography>
-                <Modules.Link color="inherit" href="/comptes/newAccount">
-                  <Modules.Button
-                    aaria-controls="customized-menu"
-                    aria-haspopup="true"
-                    variant="contained"
-                    style={{ backgroundColor: "white", float: "right" }}
-                    startIcon={<Modules.AddCircleIcon style={{}} />}
+                <div
+                  style={{
+                    flexDirection: "row",
+                    alignContent: "space-between",
+                  }}
+                >
+                  <div
+                    style={{
+                      borderWidth: 2,
+                      borderColor: "blue",
+                      width: "15%",
+                      alignContent: "center",
+                    }}
                   >
-                    AJOUTER COMPTE CLIENT
-                  </Modules.Button>
-                </Modules.Link>
+                    <FileCopyOutlined
+                      color="primary"
+                      style={{ color: "blue" }}
+                    />
+                    <CSVLink
+                      {...csvReport}
+                      style={{ MozAnimation: "infinite", fontSize: 20 }}
+                    >
+                      EXPORTER CSV
+                    </CSVLink>
+                  </div>
+                  <Modules.Link color="inherit" href="/comptes/newAccount">
+                    <Modules.Button
+                      aaria-controls="customized-menu"
+                      aria-haspopup="true"
+                      variant="contained"
+                      style={{ backgroundColor: "white", float: "right" }}
+                      startIcon={<Modules.AddCircleIcon style={{}} />}
+                    >
+                      AJOUTER COMPTE CLIENT
+                    </Modules.Button>
+                  </Modules.Link>
+                </div>
               </Modules.Paper>
             </Modules.Grid>
           </Modules.Grid>
@@ -315,37 +355,35 @@ export default function Account(props) {
                                 />
                               </Modules.Tooltip>
                             </Modules.TableCell>
-                            { 
-                              row.accountStatus === "ACTIVATED" ? (
-                                <Modules.TableCell>
-                                  <Modules.Tooltip title="Désactiver">
-                                    <Modules.LockOpenIcon
-                                      style={{ color: "green" }}
-                                      onClick={() => {
-                                        setDetails(row);
-                                        setOpenDesactivateDialog(
-                                          !openDesactivateDialog
-                                        );
-                                      }}
-                                    />
-                                  </Modules.Tooltip>
-                                </Modules.TableCell>
-                              ) : (
-                                <Modules.TableCell>
-                                  <Modules.Tooltip title="Activer">
-                                    <Modules.LockIcon
-                                      style={{ color: "red" }}
-                                      onClick={() => {
-                                        setDetails(row);
-                                        setOpenActivateDialog(
-                                          !openActivateDialog
-                                        );
-                                      }}
-                                    />
-                                  </Modules.Tooltip>
-                                </Modules.TableCell>
-                              )
-                             }
+                            {row.accountStatus === "ACTIVATED" ? (
+                              <Modules.TableCell>
+                                <Modules.Tooltip title="Désactiver">
+                                  <Modules.LockOpenIcon
+                                    style={{ color: "green" }}
+                                    onClick={() => {
+                                      setDetails(row);
+                                      setOpenDesactivateDialog(
+                                        !openDesactivateDialog
+                                      );
+                                    }}
+                                  />
+                                </Modules.Tooltip>
+                              </Modules.TableCell>
+                            ) : (
+                              <Modules.TableCell>
+                                <Modules.Tooltip title="Activer">
+                                  <Modules.LockIcon
+                                    style={{ color: "red" }}
+                                    onClick={() => {
+                                      setDetails(row);
+                                      setOpenActivateDialog(
+                                        !openActivateDialog
+                                      );
+                                    }}
+                                  />
+                                </Modules.Tooltip>
+                              </Modules.TableCell>
+                            )}
                             <Modules.TableCell>
                               <Modules.Tooltip title="Editer">
                                 <Modules.Link
@@ -387,7 +425,7 @@ export default function Account(props) {
                   details.accountId +
                   ". Voulez-vous vraiment continuer le processus d'activation ?"
                 }
-                operation="account" 
+                operation="account"
                 open={openActivateDialog}
                 details={details}
                 onClose={handleActivateDialogClose}
@@ -406,7 +444,7 @@ export default function Account(props) {
                 details={details}
                 onClose={handleDesactivateDialogClose}
               />
-            
+
               <Modules.TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"

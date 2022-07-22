@@ -16,6 +16,9 @@ import AssuredWorkloadIcon from "@material-ui/icons/BrandingWatermark";
 import Axios from "axios";
 import usersService from "../../services/Users";
 
+import { CSVLink } from "react-csv";
+import FileCopyOutlined from "@material-ui/icons/FileCopyOutlined";
+
 export default function Transaction(props) {
   const classes = useStylesTheme();
   const [open, setOpen] = Modules.React.useState(true);
@@ -103,6 +106,22 @@ export default function Transaction(props) {
     setPage(0);
   };
 
+  const headers = [
+    { label: "ID_TRANSACTION", key: "transactionId" },
+    { label: "MONTANT", key: "amount" },
+    { label: "TRANSACTION_TYPE", key: "transactionType" },
+    { label: "DATE", key: "dateTime" },
+    { label: "SATUS_DE_LA_TRANSACTION", key: "transactionStatus" },
+    { label: "SATUS_DE_LA_REMARQUE", key: "transactionRemarks" },
+    { label: "ACCOUNT_ID", key: "accountId" },
+  ];
+
+  const csvReport = {
+    filname: "transactions.csv",
+    headers: headers,
+    data: accountData,
+  };
+
   return showLoader == true ? (
     <Modules.Loader />
   ) : showError == true ? (
@@ -182,20 +201,50 @@ export default function Transaction(props) {
                 <Modules.Typography variant="h6">
                   LISTE DES TRANSACTIONS
                 </Modules.Typography>
-                <Modules.Link
-                  color="inherit"
-                  href="/transactions/newTransaction"
+
+                <div
+                  style={{
+                    flexDirection: "row",
+                    alignContent: "space-between",
+                  }}
                 >
-                  <Modules.Button
-                    aaria-controls="customized-menu"
-                    aria-haspopup="true"
-                    variant="contained"
-                    style={{ backgroundColor: "white", float: "right" }}
-                    startIcon={<Modules.AddCircleIcon style={{}} />}
+                  {" "}
+                  <div
+                    style={{
+                      borderWidth: 2,
+                      borderColor: "blue",
+                      width: "10%",
+                      alignContent: "center",
+                    }}
                   >
-                    EFFECTUER UNE TRANSACTION
-                  </Modules.Button>
-                </Modules.Link>
+                    <CSVLink
+                      {...csvReport}
+                      style={{ MozAnimation: "infinite", fontSize: 18 }}
+                    >
+                      EXPORTER EN CSV
+                      {
+                        <FileCopyOutlined
+                          color="primary"
+                          style={{ color: "blue" }}
+                        />
+                      }
+                    </CSVLink>
+                  </div>
+                  <Modules.Link
+                    color="inherit"
+                    href="/transactions/newTransaction"
+                  >
+                    <Modules.Button
+                      aaria-controls="customized-menu"
+                      aria-haspopup="true"
+                      variant="contained"
+                      style={{ backgroundColor: "white", float: "right" }}
+                      startIcon={<Modules.AddCircleIcon style={{}} />}
+                    >
+                      EFFECTUER UNE TRANSACTION
+                    </Modules.Button>
+                  </Modules.Link>
+                </div>
               </Modules.Paper>
             </Modules.Grid>
           </Modules.Grid>
@@ -286,7 +335,9 @@ export default function Transaction(props) {
                             role="checkbox"
                             tabIndex={-1}
                             key={key}
-                          >               {/* {
+                          >
+                            {" "}
+                            {/* {
                             "transactionId": 1,
                             "amount": 5000000,
                             "transactionType": "CREDIT",
