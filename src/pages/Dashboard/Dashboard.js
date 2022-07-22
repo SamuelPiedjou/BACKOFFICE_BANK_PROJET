@@ -98,14 +98,14 @@ export default function Dashboard(props) {
       >
         <div
           className={classes.toolbarIcon}
-          style={{ backgroundColor: "beige" }}
+          style={{ backgroundColor: "white" }}
         >
           <img
             src={Modules.logo}
             alt="Logo"
             style={{ width: 40, height: 40 }}
           />
-          <span>FOOD DELIVER BACKOFFICE</span>
+          <span>BACKOFFICE CELESTA BANK</span>
           <Modules.IconButton onClick={handleDrawerClose}>
             <Modules.ChevronLeftIcon />
           </Modules.IconButton>

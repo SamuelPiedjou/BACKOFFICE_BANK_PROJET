@@ -124,7 +124,7 @@ export default function Moto(props) {
             alt="Logo"
             style={{ width: 40, height: 40 }}
           />
-          <span>FOOD DELIVER BACKOFFICE2</span>
+          <span>CELESTA_BANK</span>
           <Modules.IconButton onClick={handleDrawerClose}>
             <Modules.ChevronLeftIcon />
           </Modules.IconButton>

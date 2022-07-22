@@ -115,34 +115,111 @@ function ViewDialog(props) {
         </Modules.DialogContent>
       ) : null}
 
-      {props.operation == "bookings" ? (
+      {props.operation == "account" ? (
         <Modules.DialogContent>
           <Modules.Grid container spacing={3}>
             <Modules.Grid item md={12}>
               <Modules.Paper elevation={10} style={{ padding: 25 }}>
               <Modules.DialogContentText id="alert-dialog-description">
-                  <strong>NOM DU MOTOMAN</strong> :{" "}
-                  {props.details.motoExtra ? props.details.motoExtra.user.firstName : ""}
+                <strong>n°compte</strong> :{" "}
+                  {props.details ? props.details.accountId : ""}
                 </Modules.DialogContentText>
                 <Modules.DialogContentText id="alert-dialog-description">
-                  <strong>PRENOM DU MOTOMAN</strong> :{" "}
-                  {props.details.motoExtra ? props.details.motoExtra.user.firstName : ""}
+                  <strong>SOLDE</strong> :{" "}
+                  {props.details ? props.details.balance : ""}
                 </Modules.DialogContentText>
                 <Modules.DialogContentText id="alert-dialog-description">
-                  <strong>NOM DE L'UTILISATEUR</strong> :{" "}
-                  {props.details.userExtra ? props.details.userExtra.user.firstName : ""}
+                  <strong>Date</strong> :{" "}
+                  {props.details ? props.details.createdAt : ""}
                 </Modules.DialogContentText>
                 <Modules.DialogContentText id="alert-dialog-description">
-                  <strong>PRENOM DE L'UTILISATEUR</strong> :{" "}
-                  {props.details.userExtra ? props.details.userExtra.user.firstName : ""}
+                  <strong>Status du compte</strong> :{" "}
+                  {props.details ? props.details.accountStatus : ""}
                 </Modules.DialogContentText>
                 <Modules.DialogContentText id="alert-dialog-description">
-                  <strong>DATE DE RESERVATION</strong> :{" "}
-                  {props.details.date}
+                  <strong>TYPE DE COMPTE </strong> :{" "}
+                  {props.details.accountType}
                 </Modules.DialogContentText>
                 <Modules.DialogContentText id="alert-dialog-description">
-                  <strong>HEURE</strong> :{" "}
-                  {props.details.hour}:{props.details.minute}
+                  <strong>DETENTEUR</strong> :{" "}
+                  {props.details.customerDto ? props.details.customerDto.customerName : ""}
+                  {/* {props.details.customerDto ? }:{props.details.customerDto.customerName} */}
+                </Modules.DialogContentText>
+              </Modules.Paper>
+            </Modules.Grid>
+          </Modules.Grid>
+        </Modules.DialogContent>
+      ) : null}
+      {props.operation == "transactions" ? (
+        <Modules.DialogContent>
+          <Modules.Grid container spacing={3}>
+            <Modules.Grid item md={12}>
+              <Modules.Paper elevation={10} style={{ padding: 25 }}>
+              <Modules.DialogContentText id="alert-dialog-description">
+                <strong>ID_TRANSACTION</strong> :{" "}
+                  {props.details ? props.details.accountId : ""}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>MONTANT</strong> :{" "}
+                  {props.details ? props.details.amount : ""}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>TRANSACTION_TYPE</strong> :{" "}
+                  {props.details ? props.details.transactionType : ""}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>DATE</strong> :{" "}
+                  {props.details ? props.details.dateTime : ""}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>SATUS_DE_LA_TRANSACTION</strong> :{" "}
+                  {props.details.transactionStatus}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>ACCOUNT_ID</strong> :{" "}
+                  {props.details  ? props.details.accountId: ""} 
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>REMARQUE_DE_LA_TRANSACTION</strong> :{" "}
+                  {props.details  ? props.details.transactionRemarks  : ""} 
+                </Modules.DialogContentText>
+              </Modules.Paper>
+            </Modules.Grid>
+          </Modules.Grid>
+        </Modules.DialogContent>
+      ) : null}
+      {props.operation == "transactions" ? (
+        <Modules.DialogContent>
+          <Modules.Grid container spacing={3}>
+            <Modules.Grid item md={12}>
+              <Modules.Paper elevation={10} style={{ padding: 25 }}>
+              <Modules.DialogContentText id="alert-dialog-description">
+                <strong>ID_TRANSACTION</strong> :{" "}
+                  {props.details ? props.details.accountId : ""}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>MONTANT</strong> :{" "}
+                  {props.details ? props.details.amount : ""}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>TRANSACTION_TYPE</strong> :{" "}
+                  {props.details ? props.details.transactionType : ""}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>DATE</strong> :{" "}
+                  {props.details ? props.details.dateTime : ""}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>SATUS_DE_LA_TRANSACTION</strong> :{" "}
+                  {props.details.transactionStatus}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>ACCOUNT_ID</strong> :{" "}
+                  {props.details  ? props.details.accountId: ""} 
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>REMARQUE_DE_LA_TRANSACTION</strong> :{" "}
+                  {props.details  ? props.details.transactionRemarks  : ""} 
                 </Modules.DialogContentText>
               </Modules.Paper>
             </Modules.Grid>

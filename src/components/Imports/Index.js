@@ -26,6 +26,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 
 import erreur404 from '../../assets/lotties/erreur404.json';
 import help from '../../assets/lotties/help.json';
+import bank1 from '../../assets/lotties/bank1.json'
 
 import SnackbarComponent from "../Snackbar/Snackbar";
 import DialogComponent from "../Dialog/Dialog";
@@ -103,7 +104,7 @@ import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import SearchIcon from "@material-ui/icons/Search";
 
-
+import config from '../../config/Index';
 import Error from "../../pages/Error/Error";
 import Searchbar from "../../components/Searchbar/Searchbar";
 import EqualizerIcon from '@material-ui/icons/Equalizer';
@@ -125,6 +126,8 @@ export {
   TextField,
   Paper,
   Box,
+  bank1,
+  config,
   Grid,
   Typography,
   makeStyles,

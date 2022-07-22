@@ -1,38 +1,66 @@
 /**
-    * @description      : 
-    * @author           : HP
-    * @group            : 
-    * @created          : 30/08/2021 - 12:42:57
-    * 
-    * MODIFICATION LOG
-    * - Version         : 1.0.0
-    * - Date            : 30/08/2021
-    * - Author          : HP
-    * - Modification    : 
-**/
+ * @description      :
+ * @author           : HP
+ * @group            :
+ * @created          : 30/08/2021 - 12:42:57
+ *
+ * MODIFICATION LOG
+ * - Version         : 1.0.0
+ * - Date            : 30/08/2021
+ * - Author          : HP
+ * - Modification    :
+ **/
 import * as Modules from "../../components/Imports/Index";
 import { useStylesTheme } from "../../styles/Style";
-import AssuredWorkloadIcon from '@material-ui/icons/BrandingWatermark';
+import AssuredWorkloadIcon from "@material-ui/icons/BrandingWatermark";
+import Axios from "axios";
+import usersService from "../../services/Users";
 
-export default function AccountSusp(props) {
+export default function Transaction(props) {
   const classes = useStylesTheme();
   const [open, setOpen] = Modules.React.useState(true);
+  const [openDeleteDialog, setOpenDeleteDialog] = Modules.React.useState(false);
   const [openAlert, setOpenAlert] = Modules.React.useState(false);
   const [showLoader, setShowLoader] = Modules.React.useState(true);
   const [showError, setShowError] = Modules.React.useState(false);
   const [errorMessage, setErrorMessage] = Modules.React.useState();
   const [loading, setLoading] = Modules.React.useState(false);
-  const [customerData, setcustomerData] = Modules.React.useState();
+  const [accountData, setAccountData] = Modules.React.useState();
   const [page, setPage] = Modules.React.useState(0);
+  const [openActivateDialog, setOpenActivateDialog] =
+    Modules.React.useState(false);
   const [rowsPerPage, setRowsPerPage] = Modules.React.useState(10);
   const [details, setDetails] = Modules.React.useState("");
+  const [openDesactivateDialog, setOpenDesactivateDialog] =
+    Modules.React.useState(false);
+
+  // setOpenDesactivateDialog
+  async function accountList() {
+    try {
+      const response = await Axios.get(
+        // http://localhost:8086/transaction/all
+        `http://192.168.0.148:8086/transaction/all`,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
+      //console.log(response)
+      return response.data;
+    } catch (error) {
+      //console.log(JSON.stringify(error))
+      return Promise.reject(error);
+    }
+  }
 
   Modules.React.useEffect(async () => {
     try {
-      const bookingsService = new props.bookings();
-      const customerData = await bookingsService.getBookings();
-      //console.log(JSON.stringify(customerData));
-      setcustomerData(customerData);
+      const accountData = await accountList();
+      // console.log(accountData);
+      setAccountData(accountData);
       setShowLoader(false);
     } catch (errors) {
       //console.log(JSON.stringify(errors.name));
@@ -53,6 +81,15 @@ export default function AccountSusp(props) {
 
   const handleDialogClose = () => {
     setOpenAlert(false);
+  };
+  const handleActivateDialogClose = () => {
+    setOpenActivateDialog(false);
+  };
+  const handleDesactivateDialogClose = () => {
+    setOpenDesactivateDialog(false);
+  };
+  const handleDeleteDialogClose = () => {
+    setOpenDeleteDialog(false);
   };
 
   const NewComponent = Modules.MainListItems;
@@ -77,7 +114,10 @@ export default function AccountSusp(props) {
         position="absolute"
         className={Modules.clsx(classes.appBar, open && classes.appBarShift)}
       >
-        <Modules.Toolbar className={classes.toolbar} style={{ backgroundColor: 'blue' }}>
+        <Modules.Toolbar
+          className={classes.toolbar}
+          style={{ backgroundColor: "blue" }}
+        >
           <Modules.IconButton
             edge="start"
             color="inherit"
@@ -97,7 +137,7 @@ export default function AccountSusp(props) {
             noWrap
             className={classes.title}
           >
-            GESTIONS DES COMPTES
+            MENU TRANSACTION
           </Modules.Typography>
           {/*  <Modules.IconButton color="inherit">
             <Modules.Badge badgeContent={4} color="secondary">
@@ -120,9 +160,9 @@ export default function AccountSusp(props) {
           className={classes.toolbarIcon}
           style={{ backgroundColor: "blue" }}
         >
-          <AssuredWorkloadIcon   style={{color: 'white'}}/>
-          <span>{   } </span>
-          <span style={{color:'white'}}>CELESTA BANK BACKOFFICE</span>
+          <AssuredWorkloadIcon style={{ color: "white" }} />
+          <span>{} </span>
+          <span style={{ color: "white" }}>CELESTA BANK BACKOFFICE</span>
           <Modules.IconButton onClick={handleDrawerClose}>
             <Modules.ChevronLeftIcon />
           </Modules.IconButton>
@@ -140,8 +180,22 @@ export default function AccountSusp(props) {
               <Modules.Paper className={classes.paper} elevation={10}>
                 <Modules.BankBal color="primary" />
                 <Modules.Typography variant="h6">
-                  LISTE DES COMPTES SUSPENDU
+                  LISTE DES TRANSACTIONS
                 </Modules.Typography>
+                <Modules.Link
+                  color="inherit"
+                  href="/transactions/newTransaction"
+                >
+                  <Modules.Button
+                    aaria-controls="customized-menu"
+                    aria-haspopup="true"
+                    variant="contained"
+                    style={{ backgroundColor: "white", float: "right" }}
+                    startIcon={<Modules.AddCircleIcon style={{}} />}
+                  >
+                    EFFECTUER UNE TRANSACTION
+                  </Modules.Button>
+                </Modules.Link>
               </Modules.Paper>
             </Modules.Grid>
           </Modules.Grid>
@@ -162,7 +216,7 @@ export default function AccountSusp(props) {
                           color: "#fff",
                         }}
                       >
-                        {"N°COMPTE"}
+                        {"ID_TRANSACTION"}
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
@@ -170,7 +224,7 @@ export default function AccountSusp(props) {
                           color: "#fff",
                         }}
                       >
-                        {" SOLDE"}
+                        {" MONTANT"}
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
@@ -178,7 +232,7 @@ export default function AccountSusp(props) {
                           color: "#fff",
                         }}
                       >
-                        {"DATE DE LE"}
+                        {"TRANSACTION_TYPE"}
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
@@ -186,7 +240,7 @@ export default function AccountSusp(props) {
                           color: "#fff",
                         }}
                       >
-                        {"STATUS DU COMPTE"}
+                        {"DATE"}
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
@@ -194,7 +248,15 @@ export default function AccountSusp(props) {
                           color: "#fff",
                         }}
                       >
-                        {"TYPE DE COMPTE"}
+                        {"SATUS_DE_LA_TRANSACTION"}
+                      </Modules.TableCell>
+                      <Modules.TableCell
+                        style={{
+                          backgroundColor: "blue",
+                          color: "#fff",
+                        }}
+                      >
+                        {"ACCOUNT_ID"}
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
@@ -206,32 +268,14 @@ export default function AccountSusp(props) {
                       >
                         {"ACTION"}
                       </Modules.TableCell>
-                      <Modules.TableCell
-                        style={{
-                          backgroundColor: "blue",
-                          color: "#fff",
-                        }}
-                        align="center"
-                        colSpan={2}
-                      >
-                      </Modules.TableCell>
-                      <Modules.TableCell
-                        style={{
-                          backgroundColor: "blue",
-                          color: "#fff",
-                        }}
-                        align="center"
-                        colSpan={2}
-                      >
-                        
-                      </Modules.TableCell>
                     </Modules.TableRow>
                   </Modules.TableHead>
                   <Modules.TableBody>
-                    {customerData
+                    {accountData
                       .sort(function (s1, s2) {
                         return s2.id - s1.id;
-                      }).slice(
+                      })
+                      .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
@@ -242,21 +286,39 @@ export default function AccountSusp(props) {
                             role="checkbox"
                             tabIndex={-1}
                             key={key}
-                          >
+                          >               {/* {
+                            "transactionId": 1,
+                            "amount": 5000000,
+                            "transactionType": "CREDIT",
+                            "dateTime": [
+                              2022,
+                              7,
+                              18,
+                              16,
+                              8,
+                              47
+                            ],
+                            "transactionStatus": "SUCCESSFUL",
+                            "transactionRemarks": "first deposit",
+                            "accountId": 256196009,
+                            "account": null,
+                            "reason": "VALID"
+                          }, */}
                             <Modules.TableCell>
-                                    {console.log("")}                   
+                              {row.transactionId}
+                            </Modules.TableCell>
+                            <Modules.TableCell>{row.amount}</Modules.TableCell>
+                            <Modules.TableCell>
+                              {row.transactionType}
                             </Modules.TableCell>
                             <Modules.TableCell>
-                              
+                              {row.dateTime}
                             </Modules.TableCell>
                             <Modules.TableCell>
-                              
+                              {row.transactionStatus}
                             </Modules.TableCell>
                             <Modules.TableCell>
-                               
-                            </Modules.TableCell>
-                            <Modules.TableCell>
-                              
+                              {row.accountId}
                             </Modules.TableCell>
                             <Modules.TableCell align="center">
                               <Modules.Tooltip title="Visualiser">
@@ -269,32 +331,55 @@ export default function AccountSusp(props) {
                                 />
                               </Modules.Tooltip>
                             </Modules.TableCell>
-                            <Modules.TableCell align="center">
-                              <Modules.Tooltip title="Activer/désactiver">
-                                <Modules.LockIcon
-                                  color="primary"
-                                  onClick={() => { }}
-                                />
+                            {props.showActButton === true ? (
+                              row.suspended == false ? (
+                                <Modules.TableCell>
+                                  <Modules.Tooltip title="Désactiver">
+                                    <Modules.LockOpenIcon
+                                      style={{ color: "chocolate" }}
+                                      onClick={() => {
+                                        setDetails(row);
+                                        setOpenDesactivateDialog(
+                                          !openDesactivateDialog
+                                        );
+                                      }}
+                                    />
+                                  </Modules.Tooltip>
+                                </Modules.TableCell>
+                              ) : (
+                                <Modules.TableCell>
+                                  <Modules.Tooltip title="Activer">
+                                    <Modules.LockIcon
+                                      style={{ color: "chocolate" }}
+                                      onClick={() => {
+                                        setDetails(row);
+                                        setOpenActivateDialog(
+                                          !openActivateDialog
+                                        );
+                                      }}
+                                    />
+                                  </Modules.Tooltip>
+                                </Modules.TableCell>
+                              )
+                            ) : null}
+                            <Modules.TableCell>
+                              <Modules.Tooltip title="Editer">
+                                <Modules.Link
+                                  color="inherit"
+                                  href="/transactions/newTransaction"
+                                  onClick={() => {
+                                    localStorage.setItem(
+                                      "bookingDetails",
+                                      JSON.stringify(row)
+                                    );
+                                  }}
+                                >
+                                  <Modules.EditIcon
+                                    style={{ color: "darkturquoise" }}
+                                  />
+                                </Modules.Link>
                               </Modules.Tooltip>
                             </Modules.TableCell>
-                            <Modules.TableCell>
-                      <Modules.Tooltip title="Editer">
-                        <Modules.Link
-                          color="inherit"
-                          href="/update-booking"
-                          onClick={() => {
-                            localStorage.setItem(
-                              "bookingDetails",
-                              JSON.stringify(row)
-                            );
-                          }}
-                        >
-                          <Modules.EditIcon
-                            style={{ color: "darkturquoise" }}
-                          />
-                        </Modules.Link>
-                      </Modules.Tooltip>
-                    </Modules.TableCell>
                           </Modules.TableRow>
                         );
                       })}
@@ -303,16 +388,46 @@ export default function AccountSusp(props) {
               </Modules.TableContainer>
               <Modules.ViewDialog
                 {...props}
-                title="Details Info clients"
-                operation="bookings"
+                title="DETAILS DE LA TRANSACTION"
+                operation="transactions"
                 open={openAlert}
                 onClose={handleDialogClose}
                 details={details}
               ></Modules.ViewDialog>
+
+              <Modules.ActivateDialog
+                {...props}
+                title={"Confirmation D'Activation Du compte"}
+                message={
+                  "Vous êtes sur le point d'activer le compte ID: " +
+                  details.accountId +
+                  ". Voulez-vous vraiment continuer le processus d'activation ?"
+                }
+                operation="account"
+                users={usersService}
+                open={openActivateDialog}
+                details={details}
+                onClose={handleActivateDialogClose}
+              />
+              <Modules.DesactivateDialog
+                {...props}
+                title={"Confirmation De Désactivation Du Compte"}
+                message={
+                  "Vous êtes sur le point de désactiver le compte " +
+                  details.accountId +
+                  ". Voulez-vous vraiment continuer le processus de désactivation ?"
+                }
+                operation="account"
+                users={usersService}
+                open={openDesactivateDialog}
+                details={details}
+                onClose={handleDesactivateDialogClose}
+              />
+
               <Modules.TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={customerData.length}
+                count={accountData.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}

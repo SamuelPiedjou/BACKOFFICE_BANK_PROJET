@@ -34,6 +34,26 @@ export default class BookingsService {
     }
   }
 
+  async getAccount(){
+    try {
+      const response = await Axios.get(
+        `http://192.168.0.148:8086/accounts/listAccount`,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
+      //console.log(response)
+      return response.data;
+    } catch (error) {
+      //console.log(JSON.stringify(error))
+      return Promise.reject(error);
+    }
+  }
+
   async searchBookings(data) {
     try {
       const response = await Axios.get(

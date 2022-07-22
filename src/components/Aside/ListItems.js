@@ -21,8 +21,14 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
 import List from "@material-ui/core/List";
 import PeopleIcon from "@material-ui/icons/People";
+import PeopleOutlineTwoTone from "@material-ui/icons/PeopleOutlineTwoTone";
+import PeopleAltSharp from "@material-ui/icons/PeopleAltSharp";
 import AccountBalance from "@material-ui/icons/AccountBalance";
+import AccountBoxSharp from "@material-ui/icons/AccountBoxSharp";
+import AccountTreeTwoTone from "@material-ui/icons/AccountTreeTwoTone";
+import AccountBalanceWallet from "@material-ui/icons/AccountBalanceWallet";
 import AccountBalanceOutlined from "@material-ui/icons/AccountBalanceOutlined";
+import TransferWithinAStationSharp from "@material-ui/icons/TransferWithinAStationSharp";
 import AccountTree from "@material-ui/icons/AccountTree";
 import Tooltip from "@material-ui/core/Tooltip";
 import Link from "@material-ui/core/Link";
@@ -37,6 +43,7 @@ export function MainListItems() {
   const [openOrders, setOpenOrders] = React.useState(false);
   const [openCategories, setOpenCategories] = React.useState(false);
   const [openClients, setOpenClient] = React.useState(false);
+  const [openTransaction, setOpenTransaction] = React.useState(false);
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -62,12 +69,12 @@ export function MainListItems() {
     setOpenOrders(!openOrders);
   };
 
-  const handleCategorysClick = () => {
-    setOpenCategories(!openCategories);
+  const handleTransactionClick = () => {
+    setOpenTransaction(!openTransaction);
   };
 
-  const handleBookingsClick = () => {
-    setOpenBookings(!openBookings);
+  const handleCategorysClick = () => {
+    setOpenCategories(!openCategories);
   };
 
   const handleSalePointsClick = () => {
@@ -88,7 +95,7 @@ export function MainListItems() {
         <ListItem button>
           <ListItemIcon>
             <Tooltip title="Menu Tableau De Bord">
-              <DashboardIcon color="primary" style={{ color: "#FF5C03" }} />
+              <DashboardIcon color="primary" style={{ color: "blue" }} />
             </Tooltip>
           </ListItemIcon>
           <ListItemText primary="Tableau De Bord" />
@@ -98,7 +105,7 @@ export function MainListItems() {
       <ListItem button onClick={handleCategorysClick}>
         <ListItemIcon>
           <Tooltip title="GESTION DES CLIENTS">
-            <PeopleIcon color="primary" style={{ color: "#FF5C03" }} />
+            <PeopleIcon color="primary" style={{ color: "blue" }} />
           </Tooltip>
         </ListItemIcon>
         <ListItemText primary="GESTION DES CLIENTS" />
@@ -110,7 +117,7 @@ export function MainListItems() {
             <ListItem button className={classes.nested}>
               <ListItemIcon>
                 <Tooltip title="Liste des clients non abonnés">
-                  <PeopleIcon color="primary" style={{ color: "#FF5C03" }} />
+                  <PeopleOutlineTwoTone color="primary" style={{ color: "#FF5C03" }} />
                 </Tooltip>
               </ListItemIcon>
               <ListItemText primary="Liste des clients non abonnés" />
@@ -124,7 +131,7 @@ export function MainListItems() {
             <ListItem button className={classes.nested}>
               <ListItemIcon>
                 <Tooltip title="Liste des clients abonnés">
-                  <PeopleIcon color="primary" style={{ color: "#FF5C03" }} />
+                  <PeopleAltSharp color="primary" style={{ color: "#FF5C03" }} />
                 </Tooltip>
               </ListItemIcon>
               <ListItemText primary="Liste des Clients abonnés" />
@@ -136,7 +143,7 @@ export function MainListItems() {
       <ListItem button onClick={handleClientClisk}>
         <ListItemIcon>
           <Tooltip title="GESTION DES COMPTES">
-            <AccountBalance color="primary" style={{ color: "#FF5C03" }} />
+            <AccountBalance color="primary" style={{ color: "blue" }} />
           </Tooltip>
         </ListItemIcon>
         <ListItemText primary="GESTION DES COMPTES" />
@@ -180,6 +187,61 @@ export function MainListItems() {
                 </Tooltip>
               </ListItemIcon>
               <ListItemText primary="Liste des comptes suspendu" />
+            </ListItem>
+          </Link>
+        </List>
+      </Collapse>
+
+
+
+
+      <ListItem button onClick={handleTransactionClick}>
+        <ListItemIcon>
+          <Tooltip title="GESTION DES TRANSACTIONS">
+            <TransferWithinAStationSharp color="primary" style={{ color: "blue" }} />
+          </Tooltip>
+        </ListItemIcon>
+        <ListItemText primary="GESTION DES TRANSACTIONS" />
+        {openTransaction ? <ExpandLess /> : <ExpandMore />}
+      </ListItem>
+      <Collapse in={openTransaction} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <Link color="inherit" href="/transactions">
+            <ListItem button className={classes.nested}>
+              <ListItemIcon>
+                <Tooltip title="Liste des Transactions ">
+                  <AccountTreeTwoTone color="primary" style={{ color: "#FF5C03" }} />
+                </Tooltip>
+              </ListItemIcon>
+              <ListItemText primary="Liste des Transactions" />
+            </ListItem>
+          </Link>
+        </List>
+      </Collapse>
+      <Collapse in={openTransaction} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <Link color="inherit" href="/transactions/newTransaction">
+            <ListItem button className={classes.nested}>
+              <ListItemIcon>
+                <Tooltip title="EFFECTUER UNE TRANSACTION ">
+                  <AccountBalanceWallet color="primary" style={{ color: "#FF5C03" }} />
+                </Tooltip>
+              </ListItemIcon>
+              <ListItemText primary="Effectuer une Transaction" />
+            </ListItem>
+          </Link>
+        </List>
+      </Collapse>
+      <Collapse in={openTransaction} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <Link color="inherit" href="/transactions/getTransaction">
+            <ListItem button className={classes.nested}>
+              <ListItemIcon>
+                <Tooltip title="Consulter Transaction ">
+                  <AccountBoxSharp color="primary" style={{ color: "#FF5C03" }} />
+                </Tooltip>
+              </ListItemIcon>
+              <ListItemText primary="Consulter Transaction" />
             </ListItem>
           </Link>
         </List>

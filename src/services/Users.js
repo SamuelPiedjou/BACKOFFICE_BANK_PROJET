@@ -131,20 +131,6 @@ export default class UsersService {
         `${config.apiUrl}/users`,
         {
           id: data.id,
-          login: data.login,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          imageUrl: data.imageUrl,
-          activated: true,
-          langKey: data.langKey,
-          /* createdBy: "anonymousUser",
-          createdDate: "2021-12-28T13:20:12.467Z",
-          lastModifiedBy: "anonymousUser",
-          lastModifiedDate: "2021-12-28T13:20:12.467Z", */
-          authorities: [
-            "ROLE_SCHOOL"
-          ]
         },
         {
           headers: {

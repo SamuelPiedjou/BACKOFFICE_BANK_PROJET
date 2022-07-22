@@ -140,7 +140,7 @@ export default function AccountAct(props) {
               <Modules.Paper className={classes.paper} elevation={10}>
                 <Modules.BankBal color="primary" />
                 <Modules.Typography variant="h6">
-                  LISTE DES COMPTES
+                  LISTE DES COMPTES ACTIF
                 </Modules.Typography>
               </Modules.Paper>
             </Modules.Grid>

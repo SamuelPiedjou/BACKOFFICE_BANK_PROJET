@@ -38,6 +38,9 @@ import AccountSusp from "./pages/Account/AccountSusp";
 import AccountAct from "./pages/Account/AccountAct";
 import ClientNot from "./pages/Bookings/clientNot";
 import ClientOk from "./pages/Bookings/clientOk";
+import NewAccount from "./pages/Account/NewAccount";
+import Transaction from "./pages/Transaction/Transaction";
+import NewTransaction from "./pages/Transaction/NewTransaction";
 
 const THEME = createMuiTheme({
   typography: {
@@ -101,8 +104,21 @@ export default function App() {
               path="/comptes/suspended"
               render={(props) => <AccountSusp {...props} bookings={BookingsService} />}
             />
-            
-            
+            <Route
+              exact
+              path="/comptes/newAccount"
+              render={(props) => <NewAccount {...props} Account={NewAccount} />}
+            />
+            <Route
+              exact
+              path="/transactions"
+              render={(props) => <Transaction {...props} Transaction={Transaction} />}
+            />
+            <Route
+              exact
+              path="/transactions/newTransaction"
+              render={(props) => <NewTransaction {...props} Transaction={NewTransaction} />}
+            />
           </Switch>
         </div>
       </Router>

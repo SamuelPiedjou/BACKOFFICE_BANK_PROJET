@@ -1,16 +1,17 @@
 /**
-    * @description      : 
-    * @author           : HP
-    * @group            : 
-    * @created          : 28/12/2021 - 14:26:34
-    * 
-    * MODIFICATION LOG
-    * - Version         : 1.0.0
-    * - Date            : 28/12/2021
-    * - Author          : HP
-    * - Modification    : 
-**/
+ * @description      :
+ * @author           : HP
+ * @group            :
+ * @created          : 28/12/2021 - 14:26:34
+ *
+ * MODIFICATION LOG
+ * - Version         : 1.0.0
+ * - Date            : 28/12/2021
+ * - Author          : HP
+ * - Modification    :
+ **/
 import * as Modules from "../../components/Imports/Index";
+import Axios from "axios";
 
 function DesactivateDialog(props) {
   //console.log(props.operation);
@@ -26,26 +27,35 @@ function DesactivateDialog(props) {
   };
 
   const handleAlertYesClose = async () => {
-    if (props.operation == "users") {
-      desactivateUser();
+    if (props.operation == "account") {
+      desactivateAccount(props.details.accountId);
     }
   };
+  async function desactiveAccount(accountId) {
+    try {
+      const response = await Axios.put(
+        `http://192.168.0.148:8086/accounts/suspend/${ accountId}`, 
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json", 
+          },
+        }
+      );
+      //console.log(response)
+      return response.data;
+    } catch (error) {
+      //console.log(JSON.stringify(error))
+      return Promise.reject(error);
+    }
+  }
 
-  const desactivateUser = async () => {
+  const desactivateAccount = async (id) => {
     setLoading(true);
     try {
-      const usersService = new props.users();
-      const usersData = await usersService.desactivate({
-        id: props.details.id,
-        login: props.details.user.login,
-        firstName: props.details.user.firstName,
-        lastName: props.details.user.lastName,
-        email: props.details.user.email,
-        langKey: props.details.user.langKey,
-        imageUrl: props.details.user.imageUrl
-      });
+      const usersData = await desactiveAccount(id);
       //console.log(JSON.stringify(usersData));
-      if (usersData.id) {
+      if (usersData.accountStatus == "SUSPENDED") {
         setOpenSnackbar(true);
         const timer = setTimeout(() => {
           window.location.reload();
@@ -54,131 +64,6 @@ function DesactivateDialog(props) {
           clearTimeout(timer);
         };
       }
-    } catch (errors) {
-      //console.log(JSON.stringify(errors.name));
-      if (errors.name == "Error") {
-        setLoading(false);
-        setErrorMessage(errors.message);
-        setShowError(true);
-      }
-    }
-  };
-
-  const desactivatePartner = async () => {
-    setLoading(true);
-    try {
-      const partnersService = new props.partners();
-      const partnersData = await partnersService.desactivatePartner();
-      //console.log(JSON.stringify(partnersData));
-      if (partnersData.success == true) {
-        setOpenSnackbar(true);
-        const timer = setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-        return () => {
-          clearTimeout(timer);
-        };
-      }
-    } catch (errors) {
-      //console.log(JSON.stringify(errors.name));
-      if (errors.name == "Error") {
-        setLoading(false);
-        setErrorMessage(errors.message);
-        setShowError(true);
-      }
-    }
-  };
-
-  const desactivatePartnerAccount = async () => {
-    setLoading(true);
-    try {
-      const partnersService = new props.partners();
-      const partnersData = await partnersService.desactivatePartnerAccount();
-      //console.log(JSON.stringify(partnersData));
-      if (partnersData.success == true) {
-        setOpenSnackbar(true);
-        const timer = setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-        return () => {
-          clearTimeout(timer);
-        };
-      }
-    } catch (errors) {
-      //console.log(JSON.stringify(errors.name));
-      if (errors.name == "Error") {
-        setLoading(false);
-        setErrorMessage(errors.message);
-        setShowError(true);
-      }
-    }
-  };
-
-  const desactivateFee = async () => {
-    setLoading(true);
-    try {
-      const feesService = new props.fees();
-      const feesData = await feesService.desactivateFee();
-      //console.log(JSON.stringify(partnersData));
-      if (feesData.success == true) {
-        setOpenSnackbar(true);
-        const timer = setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-        return () => {
-          clearTimeout(timer);
-        };
-      }
-    } catch (errors) {
-      //console.log(JSON.stringify(errors.name));
-      if (errors.name == "Error") {
-        setLoading(false);
-        setErrorMessage(errors.message);
-        setShowError(true);
-      }
-    }
-  };
-
-  const desactivateOperation = async () => {
-    setLoading(true);
-    try {
-      const operationsService = new props.operations();
-      const operationsData = await operationsService.desactivateOperation();
-      console.log(JSON.stringify(operationsData));
-      if (operationsData.success == true) {
-        setOpenSnackbar(true);
-        const timer = setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-        return () => {
-          clearTimeout(timer);
-        };
-      }
-    } catch (errors) {
-      //console.log(JSON.stringify(errors.name));
-      if (errors.name == "Error") {
-        setLoading(false);
-        setErrorMessage(errors.message);
-        setShowError(true);
-      }
-    }
-  };
-
-  const desactivatePartnerFee = async () => {
-    setLoading(true);
-    try {
-      const partnersFeesService = new props.partnersFees();
-      const partnersFeesData = await partnersFeesService.desactivatePartnerFee();
-      //console.log(JSON.stringify(partnersFeesData));
-      if (partnersFeesData.success == true) {
-        setOpenSnackbar(true);
-        const timer = setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-        return () => {
-          clearTimeout(timer);
-        };
-      } 
     } catch (errors) {
       //console.log(JSON.stringify(errors.name));
       if (errors.name == "Error") {

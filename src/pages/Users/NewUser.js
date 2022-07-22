@@ -171,7 +171,7 @@ export default function NewUser(props) {
             alt="Logo"
             style={{ width: 40, height: 40 }}
           />
-          <span>FOOD DELIVER BACKOFFICE</span>
+          <span>CELESTA_BANK</span>
           <Modules.IconButton onClick={handleDrawerClose}>
             <Modules.ChevronLeftIcon />
           </Modules.IconButton>

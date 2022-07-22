@@ -1,7 +1,18 @@
 import * as Modules from "../../components/Imports/Index";
 import { useStyles } from "../../styles/Style";
+import Lottie from "react-lottie";
+import bank1 from "../../assets/lotties/bank1.json";
 
 export default function Login(props) {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: bank1,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
   const classes = useStyles();
   const [open, setOpen] = Modules.React.useState(false);
   const [username, setUserName] = Modules.React.useState();
@@ -24,7 +35,7 @@ export default function Login(props) {
   const history = Modules.useHistory();
   const handleSubmit = async (e) => {
     e.preventDefault();
-   // this.setState({ isLoading: true });
+    // this.setState({ isLoading: true });
     setLoading(true);
     try {
       const authService = new props.logUserIn();
@@ -43,7 +54,7 @@ export default function Login(props) {
         };
       }
     } catch (errors) {
-      if (errors.errors.name == 'Error') {
+      if (errors.errors.name == "Error") {
         setLoading(false);
         setErrorMessage(errors);
         setShowError(true);
@@ -68,15 +79,10 @@ export default function Login(props) {
         elevation={6}
         square
       >
+       
         <div className={classes.paper}>
-          <img src={Modules.logo} alt="Logo" className={classes.avatar} />
-          {/* <div className={classes.alert}>
-            <Modules.Alert severity="info">
-              <Modules.Typography variant="h6">
-                AKENO BACKOFFICE 👋
-              </Modules.Typography>
-            </Modules.Alert>
-          </div> */}
+          <Lottie options={defaultOptions} height={400} width={400} />
+           
           <form
             className={classes.form}
             onSubmit={handleSubmit}

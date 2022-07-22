@@ -12,6 +12,7 @@
 **/
 import { bpfrpt_proptype_ScrollIndices } from "react-virtualized/dist/commonjs/ArrowKeyStepper";
 import * as Modules from "../../components/Imports/Index";
+import Axios from "axios";
 
 function ActivateDialog(props) {
   //console.log(JSON.stringify(props.details.user));
@@ -21,27 +22,42 @@ function ActivateDialog(props) {
   const [errorMessage, setErrorMessage] = Modules.React.useState();
   const [loading, setLoading] = Modules.React.useState(false);
 
+
+
+  async function activeAccount(accountId) {
+    try {
+      const response = await Axios.put(
+        `http://192.168.0.148:8086/accounts/activeAcc/${ accountId}`,  
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json", 
+          },
+        }
+      );
+      //console.log(response)
+      return response.data;
+    } catch (error) {
+      //console.log(JSON.stringify(error))
+      return Promise.reject(error);
+    }
+  }
+
+
+
+
   const handleAlertYesClose = async () => {
-    if (props.operation == "users") {
-      activateUser();
+    if (props.operation == "account") {
+      desactivateAccount(props.details.accountId);
     }
   };
 
-  const activateUser = async () => {
+  const desactivateAccount = async (id) => {
     setLoading(true);
     try {
-      const usersService = new props.users();
-      const usersData = await usersService.activate({
-        id: props.details.id,
-        login: props.details.user.login,
-        firstName: props.details.user.firstName,
-        lastName: props.details.user.lastName,
-        email: props.details.user.email,
-        langKey: props.details.user.langKey,
-        imageUrl: props.details.user.imageUrl
-      });
+      const usersData = await activeAccount(id);
       //console.log(JSON.stringify(usersData));
-      if (usersData.id) {
+      if (usersData.accountStatus == "ACTIVATED") {
         setOpenSnackbar(true);
         const timer = setTimeout(() => {
           window.location.reload();
@@ -59,6 +75,8 @@ function ActivateDialog(props) {
       }
     }
   };
+
+
 
   return showError == true ? (
     <Modules.ErrorDialog
