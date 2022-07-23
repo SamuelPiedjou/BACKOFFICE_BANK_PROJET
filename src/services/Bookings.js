@@ -37,7 +37,7 @@ export default class BookingsService {
   async getAccount(){
     try {
       const response = await Axios.get(
-        `http://192.168.0.148:8086/accounts/listAccount`,
+        `http://172.21.253.133:8086/accounts/listAccount`,
         {
           headers: {
             Accept: "application/json",

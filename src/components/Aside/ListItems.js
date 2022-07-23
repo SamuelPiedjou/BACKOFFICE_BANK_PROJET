@@ -113,28 +113,28 @@ export function MainListItems() {
       </ListItem>
       <Collapse in={openCategories} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <Link color="inherit" href="/clients/nonAct">
+          <Link color="inherit" href="/clients">
             <ListItem button className={classes.nested}>
               <ListItemIcon>
                 <Tooltip title="Liste des clients non abonnés">
                   <PeopleOutlineTwoTone color="primary" style={{ color: "#FF5C03" }} />
                 </Tooltip>
               </ListItemIcon>
-              <ListItemText primary="Liste des clients non abonnés" />
+              <ListItemText primary="Liste des clients" />
             </ListItem>
           </Link>
         </List>
       </Collapse>
       <Collapse in={openCategories} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <Link color="inherit" href="/clients/act">
+          <Link color="inherit" href="/clientsSous">
             <ListItem button className={classes.nested}>
               <ListItemIcon>
-                <Tooltip title="Liste des clients abonnés">
+                <Tooltip title="Liste des clients souscriptions">
                   <PeopleAltSharp color="primary" style={{ color: "#FF5C03" }} />
                 </Tooltip>
               </ListItemIcon>
-              <ListItemText primary="Liste des Clients abonnés" />
+              <ListItemText primary="Liste des souscriptions" />
             </ListItem>
           </Link>
         </List>

@@ -42,7 +42,7 @@ export default function Transaction(props) {
     try {
       const response = await Axios.get(
         // http://localhost:8086/transaction/all
-        `http://192.168.0.148:8086/transaction/all`,
+        `http://172.21.253.133:8086/transaction/all`,
         {
           headers: {
             Accept: "application/json",

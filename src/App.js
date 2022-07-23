@@ -1,15 +1,15 @@
 /**
-    * @description      : 
-    * @author           : HP
-    * @group            : 
-    * @created          : 15/12/2021 - 10:28:44
-    * 
-    * MODIFICATION LOG
-    * - Version         : 1.0.0
-    * - Date            : 15/12/2021
-    * - Author          : HP
-    * - Modification    : 
-**/
+ * @description      :
+ * @author           : HP
+ * @group            :
+ * @created          : 15/12/2021 - 10:28:44
+ *
+ * MODIFICATION LOG
+ * - Version         : 1.0.0
+ * - Date            : 15/12/2021
+ * - Author          : HP
+ * - Modification    :
+ **/
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/styles";
@@ -41,6 +41,9 @@ import ClientOk from "./pages/Bookings/clientOk";
 import NewAccount from "./pages/Account/NewAccount";
 import Transaction from "./pages/Transaction/Transaction";
 import NewTransaction from "./pages/Transaction/NewTransaction";
+import ClientList from "./pages/Client/ClientList";
+import NewClient from "./pages/Client/NewClient";
+import UpdateClient from "./pages/Client/updateClient";
 
 const THEME = createMuiTheme({
   typography: {
@@ -71,38 +74,54 @@ export default function App() {
               exact
               path="/dashboard"
               render={(props) => (
-                <Dashboard {...props} dashboard={DashboardService} bookings={BookingsService}/>
+                <Dashboard
+                  {...props}
+                  dashboard={DashboardService}
+                  bookings={BookingsService}
+                />
               )}
             />
             <Route
               exact
-              path="/clients"
-              render={(props) => <Bookings {...props} bookings={BookingsService} />}
+              path="/cli"
+              render={(props) => (
+                <Bookings {...props} bookings={BookingsService} />
+              )}
             />
             <Route
               exact
               path="/clients/nonAct"
-              render={(props) => <ClientNot {...props} bookings={BookingsService} />}
+              render={(props) => (
+                <ClientNot {...props} bookings={BookingsService} />
+              )}
             />
             <Route
               exact
               path="/clients/act"
-              render={(props) => <ClientOk {...props} bookings={BookingsService} />}
+              render={(props) => (
+                <ClientOk {...props} bookings={BookingsService} />
+              )}
             />
             <Route
               exact
               path="/comptes"
-              render={(props) => <Account {...props} bookings={BookingsService} />}
+              render={(props) => (
+                <Account {...props} bookings={BookingsService} />
+              )}
             />
             <Route
               exact
               path="/comptes/activated"
-              render={(props) => <AccountAct {...props} bookings={BookingsService} />}
+              render={(props) => (
+                <AccountAct {...props} bookings={BookingsService} />
+              )}
             />
             <Route
               exact
               path="/comptes/suspended"
-              render={(props) => <AccountSusp {...props} bookings={BookingsService} />}
+              render={(props) => (
+                <AccountSusp {...props} bookings={BookingsService} />
+              )}
             />
             <Route
               exact
@@ -112,12 +131,37 @@ export default function App() {
             <Route
               exact
               path="/transactions"
-              render={(props) => <Transaction {...props} Transaction={Transaction} />}
+              render={(props) => (
+                <Transaction {...props} Transaction={Transaction} />
+              )}
             />
             <Route
               exact
               path="/transactions/newTransaction"
-              render={(props) => <NewTransaction {...props} Transaction={NewTransaction} />}
+              render={(props) => (
+                <NewTransaction {...props} Transaction={NewTransaction} />
+              )}
+            />
+            <Route
+              exact
+              path="/clients"
+              render={(props) => (
+                <ClientList {...props} ClientList={ClientList} />
+              )}
+            />
+            <Route
+              exact
+              path="/clients/new"
+              render={(props) => (
+                <NewClient {...props} ClientList={NewClient} />
+              )}
+            />
+            <Route
+              exact
+              path="/client/updateClient"
+              render={(props) => (
+                <UpdateClient {...props} ClientList={UpdateClient} />
+              )}
             />
           </Switch>
         </div>

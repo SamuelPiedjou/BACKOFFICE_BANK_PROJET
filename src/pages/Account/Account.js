@@ -18,7 +18,18 @@ import usersService from "../../services/Users";
 import { CSVLink } from "react-csv";
 import FileCopyOutlined from "@material-ui/icons/FileCopyOutlined";
 
+import Lottie from "react-lottie"; 
+import excell from "../../assets/lotties/excell.json"
+import pdf from "../../assets/lotties/pdf.json"
 export default function Account(props) {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: pdf,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
   const classes = useStylesTheme();
   const [open, setOpen] = Modules.React.useState(true);
   const [openDeleteDialog, setOpenDeleteDialog] = Modules.React.useState(false);
@@ -40,7 +51,7 @@ export default function Account(props) {
   async function accountList() {
     try {
       const response = await Axios.get(
-        `http://192.168.0.148:8086/accounts/listAccount`,
+        `http://172.21.253.133:8086/accounts/listAccount`,
         {
           headers: {
             Accept: "application/json",
@@ -202,22 +213,13 @@ export default function Account(props) {
                   }}
                 >
                   <div
-                    style={{
-                      borderWidth: 2,
-                      borderColor: "blue",
-                      width: "15%",
-                      alignContent: "center",
-                    }}
+                    
                   >
-                    <FileCopyOutlined
-                      color="primary"
-                      style={{ color: "blue" }}
-                    />
                     <CSVLink
                       {...csvReport}
-                      style={{ MozAnimation: "infinite", fontSize: 20 }}
+                      
                     >
-                      EXPORTER CSV
+                       <Lottie options={defaultOptions} height={40} width={40} />
                     </CSVLink>
                   </div>
                   <Modules.Link color="inherit" href="/comptes/newAccount">

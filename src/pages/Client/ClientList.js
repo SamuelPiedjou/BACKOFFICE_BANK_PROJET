@@ -1,38 +1,82 @@
 /**
-    * @description      : 
-    * @author           : HP
-    * @group            : 
-    * @created          : 30/08/2021 - 12:42:57
-    * 
-    * MODIFICATION LOG
-    * - Version         : 1.0.0
-    * - Date            : 30/08/2021
-    * - Author          : HP
-    * - Modification    : 
-**/
+ * @description      :
+ * @author           : HP
+ * @group            :
+ * @created          : 30/08/2021 - 12:42:57
+ *
+ * MODIFICATION LOG
+ * - Version         : 1.0.0
+ * - Date            : 30/08/2021
+ * - Author          : HP
+ * - Modification    :
+ **/
 import * as Modules from "../../components/Imports/Index";
 import { useStylesTheme } from "../../styles/Style";
-import AssuredWorkloadIcon from '@material-ui/icons/BrandingWatermark';
+import AssuredWorkloadIcon from "@material-ui/icons/BrandingWatermark";
+import Axios from "axios";
+import usersService from "../../services/Users";
 
-export default function ClientOk(props) {
+import { CSVLink } from "react-csv";
+import FileCopyOutlined from "@material-ui/icons/FileCopyOutlined";
+import Lottie from "react-lottie"; 
+import excell from "../../assets/lotties/excell.json"
+import pdf from "../../assets/lotties/pdf.json"
+
+{/* <Lottie options={defaultOptions} height={400} width={400} /> */}
+export default function ClientList(props) {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: pdf,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
   const classes = useStylesTheme();
   const [open, setOpen] = Modules.React.useState(true);
+  const [openDeleteDialog, setOpenDeleteDialog] = Modules.React.useState(false);
   const [openAlert, setOpenAlert] = Modules.React.useState(false);
   const [showLoader, setShowLoader] = Modules.React.useState(true);
   const [showError, setShowError] = Modules.React.useState(false);
-  const [errorMessage, setErrorMessage] = Modules.React.useState();
-  const [loading, setLoading] = Modules.React.useState(false);
-  const [customerData, setcustomerData] = Modules.React.useState();
+  const [errorMessage, setErrorMessage] = Modules.React.useState(); 
+  const [accountData, setAccountData] = Modules.React.useState();
   const [page, setPage] = Modules.React.useState(0);
+  const [openActivateDialog, setOpenActivateDialog] =
+    Modules.React.useState(false);
   const [rowsPerPage, setRowsPerPage] = Modules.React.useState(10);
   const [details, setDetails] = Modules.React.useState("");
+  const [openDesactivateDialog, setOpenDesactivateDialog] =
+    Modules.React.useState(false);
+
+  // setOpenDesactivateDialog
+  async function customerList() {
+    try {
+      const response = await Axios.get(
+        // http://localhost:8086/transaction/all
+        // `http://172.21.253.133:8086/transaction/all`,
+        `http://172.21.253.133:8086/customer/allCustDetails`,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json", 
+          },
+        }
+      );
+      //console.log(response)
+      return response.data;
+    } catch (error) {
+      //console.log(JSON.stringify(error))
+      return Promise.reject(error);
+    }
+  }
 
   Modules.React.useEffect(async () => {
+
+
     try {
-      const bookingsService = new props.bookings();
-      const customerData = await bookingsService.getBookings();
-      //console.log(JSON.stringify(customerData));
-      setcustomerData(customerData);
+      const accountData = await customerList();
+      // console.log(accountData);
+      setAccountData(accountData);
       setShowLoader(false);
     } catch (errors) {
       //console.log(JSON.stringify(errors.name));
@@ -54,6 +98,15 @@ export default function ClientOk(props) {
   const handleDialogClose = () => {
     setOpenAlert(false);
   };
+  const handleActivateDialogClose = () => {
+    setOpenActivateDialog(false);
+  };
+  const handleDesactivateDialogClose = () => {
+    setOpenDesactivateDialog(false);
+  };
+  const handleDeleteDialogClose = () => {
+    setOpenDeleteDialog(false);
+  };
 
   const NewComponent = Modules.MainListItems;
 
@@ -64,6 +117,22 @@ export default function ClientOk(props) {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const headers = [
+    { label: "ID_TRANSACTION", key: "transactionId" },
+    { label: "MONTANT", key: "amount" },
+    { label: "TRANSACTION_TYPE", key: "transactionType" },
+    { label: "DATE", key: "dateTime" },
+    { label: "SATUS_DE_LA_TRANSACTION", key: "transactionStatus" },
+    { label: "SATUS_DE_LA_REMARQUE", key: "transactionRemarks" },
+    { label: "ACCOUNT_ID", key: "accountId" },
+  ];
+
+  const csvReport = {
+    filname:'customerList.csv',
+    headers: headers,
+    data: accountData,
   };
 
   return showLoader == true ? (
@@ -77,7 +146,10 @@ export default function ClientOk(props) {
         position="absolute"
         className={Modules.clsx(classes.appBar, open && classes.appBarShift)}
       >
-        <Modules.Toolbar className={classes.toolbar} style={{ backgroundColor: 'blue' }}>
+        <Modules.Toolbar
+          className={classes.toolbar}
+          style={{ backgroundColor: "blue" }}
+        >
           <Modules.IconButton
             edge="start"
             color="inherit"
@@ -97,7 +169,7 @@ export default function ClientOk(props) {
             noWrap
             className={classes.title}
           >
-            GESTIONS DES CLIENTS
+            MENU GESTION DES CLIENTS
           </Modules.Typography>
           {/*  <Modules.IconButton color="inherit">
             <Modules.Badge badgeContent={4} color="secondary">
@@ -120,9 +192,9 @@ export default function ClientOk(props) {
           className={classes.toolbarIcon}
           style={{ backgroundColor: "blue" }}
         >
-          <AssuredWorkloadIcon   style={{color: 'white'}}/>
-          <span>{   } </span>
-          <span style={{color:'white'}}>CELESTA BANK BACKOFFICE</span>
+          <AssuredWorkloadIcon style={{ color: "white" }} />
+          <span>{} </span>
+          <span style={{ color: "white" }}>CELESTA BANK BACKOFFICE</span>
           <Modules.IconButton onClick={handleDrawerClose}>
             <Modules.ChevronLeftIcon />
           </Modules.IconButton>
@@ -138,10 +210,45 @@ export default function ClientOk(props) {
           <Modules.Grid container spacing={3}>
             <Modules.Grid item xs={12}>
               <Modules.Paper className={classes.paper} elevation={10}>
-                <Modules.PeopleIcon color="primary" />
+                <Modules.BankBal color="primary" />
                 <Modules.Typography variant="h6">
-                  LISTE DES CLIENT AYANT UN COMPTE
+                  LISTE DES CLIENTS
                 </Modules.Typography>
+
+                <div
+                  style={{
+                    flexDirection: "row",
+                    alignContent: "space-between",
+                    justifyContent:"center",
+                    alignItems:"center"
+                  }}
+                >
+                  {" "}
+                  <div 
+                  >
+                    <CSVLink
+                      {...csvReport}
+                      style={{fontSize: 18, color:"white" ,fontWeight:"bold", alignContent:"center",justifyContent:"center"}}
+                    >
+                       
+                       <Lottie options={defaultOptions} height={40} width={40} /> 
+                    </CSVLink>
+                  </div>
+                  <Modules.Link
+                    color="inherit"
+                    href="/clients/new"
+                  >
+                    <Modules.Button
+                      aaria-controls="customized-menu"
+                      aria-haspopup="true"
+                      variant="contained"
+                      style={{ backgroundColor: "white", float: "right" , color:"green", fontSize:20,fontWeight:"bold"}}
+                      startIcon={<Modules.AddCircleIcon style={{}} />}
+                    >
+                      AJOUTER UN CLIENT
+                    </Modules.Button>
+                  </Modules.Link>
+                </div>
               </Modules.Paper>
             </Modules.Grid>
           </Modules.Grid>
@@ -162,7 +269,7 @@ export default function ClientOk(props) {
                           color: "#fff",
                         }}
                       >
-                        {"ID_USER"}
+                        {"ID_CLIENT"}
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
@@ -203,7 +310,17 @@ export default function ClientOk(props) {
                           color: "#fff",
                         }}
                       >
-                        {"N°COMPTE"}
+                        {"DATE_NAISSANCE"}
+                      </Modules.TableCell>
+                      <Modules.TableCell
+                        style={{
+                          backgroundColor: "blue",
+                          color: "#fff",
+                        }}
+                        align="center"
+                        colSpan={2}
+                      >
+                        {"ACCOUNT_ID"}
                       </Modules.TableCell>
                       <Modules.TableCell
                         style={{
@@ -228,10 +345,11 @@ export default function ClientOk(props) {
                     </Modules.TableRow>
                   </Modules.TableHead>
                   <Modules.TableBody>
-                    {customerData
+                    {accountData
                       .sort(function (s1, s2) {
                         return s2.id - s1.id;
-                      }).slice(
+                      })
+                      .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
@@ -244,19 +362,23 @@ export default function ClientOk(props) {
                             key={key}
                           >
                             <Modules.TableCell>
-                                    {console.log("")}                   
+                              {row.userId}
+                              {/* {console.log(row.accountALLDtos[key].accountId)} */}
+                            </Modules.TableCell>
+                            <Modules.TableCell>{row.customerName}</Modules.TableCell>
+                            <Modules.TableCell>
+                              {row.emailId}
                             </Modules.TableCell>
                             <Modules.TableCell>
-                              
+                              {row.date_inscription}
                             </Modules.TableCell>
                             <Modules.TableCell>
-                              
+                              {row.phoneNo}
                             </Modules.TableCell>
                             <Modules.TableCell>
-                               
+                            {row.birthday}
                             </Modules.TableCell>
-                            <Modules.TableCell>
-                              
+                            <Modules.TableCell> 
                             </Modules.TableCell>
                             <Modules.TableCell align="center">
                               <Modules.Tooltip title="Visualiser">
@@ -270,23 +392,20 @@ export default function ClientOk(props) {
                               </Modules.Tooltip>
                             </Modules.TableCell>
                             <Modules.TableCell>
-                      <Modules.Tooltip title="Editer">
-                        <Modules.Link
-                          color="inherit"
-                          href="/update-booking"
-                          onClick={() => {
-                            localStorage.setItem(
-                              "bookingDetails",
-                              JSON.stringify(row)
-                            );
-                          }}
-                        >
-                          <Modules.EditIcon
-                            style={{ color: "darkturquoise" }}
-                          />
-                        </Modules.Link>
-                      </Modules.Tooltip>
-                    </Modules.TableCell>
+                              <Modules.Tooltip title="Editer">
+                                <Modules.Link
+                                  color="inherit"
+                                  href="/client/updateClient"
+                                  onClick={() => {
+                                    localStorage.setItem('userDetails', JSON.stringify(row));
+                                }}
+                                >
+                                  <Modules.EditIcon
+                                    style={{ color: "darkturquoise" }}
+                                  />
+                                </Modules.Link>
+                              </Modules.Tooltip>
+                            </Modules.TableCell>
                           </Modules.TableRow>
                         );
                       })}
@@ -295,16 +414,46 @@ export default function ClientOk(props) {
               </Modules.TableContainer>
               <Modules.ViewDialog
                 {...props}
-                title="Details Info clients"
-                operation="Clients"
+                title="DETAILS DE SUR LE CLIENT"
+                operation="client"
                 open={openAlert}
                 onClose={handleDialogClose}
                 details={details}
               ></Modules.ViewDialog>
+
+              <Modules.ActivateDialog
+                {...props}
+                title={"Confirmation D'Activation Du compte"}
+                message={
+                  "Vous êtes sur le point d'activer le compte ID: " +
+                  details.accountId +
+                  ". Voulez-vous vraiment continuer le processus d'activation ?"
+                }
+                operation="account"
+                users={usersService}
+                open={openActivateDialog}
+                details={details}
+                onClose={handleActivateDialogClose}
+              />
+              <Modules.DesactivateDialog
+                {...props}
+                title={"Confirmation De Désactivation Du Compte"}
+                message={
+                  "Vous êtes sur le point de désactiver le compte " +
+                  details.accountId +
+                  ". Voulez-vous vraiment continuer le processus de désactivation ?"
+                }
+                operation="account"
+                users={usersService}
+                open={openDesactivateDialog}
+                details={details}
+                onClose={handleDesactivateDialogClose}
+              />
+
               <Modules.TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={customerData.length}
+                count={accountData.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}

@@ -188,6 +188,40 @@ function ViewDialog(props) {
           </Modules.Grid>
         </Modules.DialogContent>
       ) : null}
+      {props.operation == "client" ? (
+        <Modules.DialogContent>
+          <Modules.Grid container spacing={3}>
+            <Modules.Grid item md={12}>
+              <Modules.Paper elevation={10} style={{ padding: 25 }}>
+              <Modules.DialogContentText id="alert-dialog-description">
+                <strong>ID_CLIENT</strong> :{" "}
+                  {props.details ? props.details.userId : ""}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>NOM</strong> :{" "}
+                  {props.details ? props.details.customerName : ""}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>EMAIL</strong> :{" "}
+                  {props.details ? props.details.emailId : ""}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>DATE_SOUSCRIPTION</strong> :{" "}
+                  {props.details ? props.details.date_inscription : ""}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>PHONE</strong> :{" "}
+                  {props.details.phoneNo}
+                </Modules.DialogContentText>
+                <Modules.DialogContentText id="alert-dialog-description">
+                  <strong>ACCOUNT_ID</strong> :{" "}
+                  {props.details.accountALLDtos  ? props.details.accountALLDtos.accountId: ""} 
+                </Modules.DialogContentText> 
+              </Modules.Paper>
+            </Modules.Grid>
+          </Modules.Grid>
+        </Modules.DialogContent>
+      ) : null}
       {props.operation == "transactions" ? (
         <Modules.DialogContent>
           <Modules.Grid container spacing={3}>

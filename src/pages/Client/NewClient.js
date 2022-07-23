@@ -14,8 +14,11 @@ import * as Modules from "../../components/Imports/Index";
 import { useStylesTheme } from "../../styles/Style";
 import AssuredWorkloadIcon from "@material-ui/icons/BrandingWatermark";
 import Axios from "axios";
-
-export default function NewAccount(props) {
+import Lottie from "react-lottie";
+import logo from "../../assets/lotties/logo.json";
+import { TrainRounded, TrendingUpRounded } from "@material-ui/icons";
+// 143670816
+export default function NewClient(props) {
   const classes = useStylesTheme();
   const [open, setOpen] = Modules.React.useState(false);
   const [openAlert, setOpenAlert] = Modules.React.useState(false);
@@ -23,33 +26,40 @@ export default function NewAccount(props) {
   const [showError, setShowError] = Modules.React.useState(false);
   const [errorMessage, setErrorMessage] = Modules.React.useState();
   const [loading, setLoading] = Modules.React.useState(false);
-  const [accountData, setAccountData] = Modules.React.useState();
   const [page, setPage] = Modules.React.useState(0);
   const [rowsPerPage, setRowsPerPage] = Modules.React.useState(10);
   const [details, setDetails] = Modules.React.useState("");
-
-  const [userName, setUserName] = Modules.React.useState();
-  const [userId, setUserId] = Modules.React.useState();
+  const [name, setName] = Modules.React.useState();
+  const [password, setPassword] = Modules.React.useState();
   const [accountType, setAccountType] = Modules.React.useState();
-  const [balance, setBalance] = Modules.React.useState();
-  const [userProfile, setUserProfile] = Modules.React.useState([]);
-  const [profilesData, setProfilesData] = Modules.React.useState([]);
+  const [email, setEmail] = Modules.React.useState();
+  const [phone, setPhone] = Modules.React.useState();
+
+
+  const [dateNaiss, setDateNaiss] = Modules.React.useState();
+  const [endDate, setEndDate] = Modules.React.useState();
+  const [genre, setGenre] = Modules.React.useState();
+  const [newSelected2, setNewSelected2] = Modules.React.useState([]);
+  const [openConfirmationDialog, setOpenConfirmationDialog] =
+    Modules.React.useState(false);
+
+  const [openSnackbar, setOpenSnackbar] = Modules.React.useState(false);
+  const [openBalanceInsuf, setOpenBalanceInsuf] = Modules.React.useState(false);
 
   const apiurl = "http://172.21.253.133:8086/accounts";
-  const choice = accountType=== "EPARGNE" ? "savings" : "current";
-  // "http://localhost:8086/accounts/current/"
-  
 
-  async function newAccount(data) {  
-    console.log("choice"+choice); 
-    console.log("userId"+data.userId);
-    console.log("balance"+data.balance);
+  const choice = accountType === "RETRAIT" ? "withdraw" : "deposit";
+
+  console.log("N°COMPTE SENDER   " + name);
+  console.log("BALANCE   " + email);
+  async function newTransaction(data) {
     try {
       const response = await Axios.post(
-        `${apiurl}/${choice}/${data.userId}`,
-        { 
-          accountType: data.accountType,
-          balance: data.balance,
+        `${apiurl}/${choice}`,
+        {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
         },
         {
           headers: {
@@ -58,33 +68,67 @@ export default function NewAccount(props) {
           },
         }
       );
-      //console.log(response);
+      console.log(response);
       return response.data;
     } catch (error) {
-      //console.log(JSON.stringify(error));
+      console.log(error);
       return Promise.reject(error);
     }
-    
   }
- 
+  async function createCustomer(data) {
+    try {
+      const response = await Axios.post(
+        // `http://192.168.0.148:8086/accounts/transfer`,
+        `http://172.21.253.133:8086/customer/add`,
+        // http://localhost:8086/customer/add
+        {
+          birthday: data.dateNaiss,
+          customerName: data.name,
+          emailId: data.email,
+          gender: data.genre,
+          password:data.password,
+          phoneNo: data.phone,
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+  }
+
   const history = Modules.useHistory();
-const handleSubmit = async (e) => {
-    console.log(+e)
+  const handleTransfert = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
-      
-      const usersData = await  newAccount({
-        accountType,
-        userId,
-        balance,
+      const usersData = await createCustomer({
+        dateNaiss,
+        name,
+        email,
+        genre,
+        password,
+        phone
       });
-      //console.log(JSON.stringify(usersData));
-      setLoading(false);
-      if (usersData.returnMsg === 'success"') {
+      setLoading(false); 
+      if (usersData.userId != null) {
+        setOpenSnackbar(true);
+      }
+      console.log("_______________________");
+      console.log(usersData.transactionStatus);
+      if (usersData.transactionStatus === "SUCCESSFUL") {
+        setOpenSnackbar(true);
         const timer = setTimeout(() => {
-          history.push("/comptes");
-        }, 1000);
+          history.push("/transactions");
+        }, 2000);
         return () => {
           clearTimeout(timer);
         };
@@ -155,7 +199,7 @@ const handleSubmit = async (e) => {
             noWrap
             className={classes.title}
           >
-            GESTIONS DES COMPTES
+            MENU GESTION DES CLIENTS
           </Modules.Typography>
           {/*  <Modules.IconButton color="inherit">
              <Modules.Badge badgeContent={4} color="secondary">
@@ -198,7 +242,7 @@ const handleSubmit = async (e) => {
               <Modules.Paper className={classes.paper} elevation={10}>
                 <Modules.BankBal color="primary" />
                 <Modules.Typography variant="h6">
-                  AJOUT COMPTE POUR CLIENT
+                  ENREGISTRER UN CLIENT
                 </Modules.Typography>
               </Modules.Paper>
             </Modules.Grid>
@@ -209,36 +253,9 @@ const handleSubmit = async (e) => {
                 <Modules.Paper className={classes.paper} elevation={10}>
                   <form
                     autoComplete="off"
-                    onSubmit={handleSubmit}
+                    onSubmit={handleTransfert}
                     style={{ margin: 0 }}
                   >
-                    <div>
-                      <Modules.FormControl
-                        variant="outlined"
-                        style={{ width: "97%", margin: 20 }}
-                        required
-                      >
-                        <Modules.InputLabel id="demo-simple-select-outlined-label">
-                          TYPE DE COMPTE
-                        </Modules.InputLabel>
-                        <Modules.Select
-                          labelId="demo-simple-select-outlined-label"
-                          id="demo-simple-select-outlined"
-                          name="accountType"
-                          value={accountType}
-                          onChange={(e) => setAccountType(e.target.value)}
-                          label="TYPE DE COMPTE"
-                        >
-                          <Modules.MenuItem value="COURANT">
-                            COURANT
-                          </Modules.MenuItem>
-                          <Modules.MenuItem value="EPARGNE">
-                            EPARGNE
-                          </Modules.MenuItem>
-                        </Modules.Select>
-                      </Modules.FormControl>
-                    </div>
-
                     <div style={{ alignItems: "center" }}>
                       <div
                         style={{
@@ -247,9 +264,73 @@ const handleSubmit = async (e) => {
                           color: "#fff",
                           padding: 10,
                           borderRadius: 10,
+                          margin: 20,
                         }}
                       >
-                        INFORMATION DU CLIENT
+                        INFORMATIONS SUR LE CLIENT
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        marginTop: 20,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        flexDirection:"row", 
+                      }}
+                    >
+                      <div className={classes.form90} style={{width:'100%',marginRight:10}}>
+                        <Modules.TextField
+                          id="start"
+                          label="DATE NAiSSANCE"
+                          type="date" 
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          name="startDate"
+                          variant="outlined"
+                          required
+                          onChange={(e) => setDateNaiss(e.target.value)}
+                        />
+                         
+                        <Modules.FormControl
+                          variant="outlined"
+                          style={{
+                            width: "20%",
+                          }}
+                          required
+                        >
+                          <Modules.InputLabel id="demo-simple-select-outlined-label22">
+                            GENRE
+                          </Modules.InputLabel>
+                          <Modules.Select
+                            labelId="demo-simple-select-outlined-label22"
+                            id="genre"
+                            value={genre ? genre : ""}
+                            label="GENRE"
+                            onChange={(e) => setGenre(e.target.value)}
+                          >
+                              <Modules.MenuItem value={"MALE"}>
+                                 MASCULIN
+                              </Modules.MenuItem>
+                              <Modules.MenuItem value={"FEMALE"}>
+                                 FEMININ
+                              </Modules.MenuItem>
+                          </Modules.Select>
+                        </Modules.FormControl>  
+                      </div>
+                    </div> 
+                    <div style={{ alignItems: "center" }}>
+                      <div
+                        style={{
+                          backgroundColor: "blue",
+                          opacity: 0.6,
+                          color: "#fff",
+                          padding: 10,
+                          borderRadius: 10,
+                          margin:15
+                        }}
+                      >
+                        2 étapes
                       </div>
                     </div>
                     <div
@@ -262,21 +343,43 @@ const handleSubmit = async (e) => {
                       <Modules.TextField
                         style={{ width: "50%", margin: 20 }}
                         id="outlined-basic"
-                        label="ID DU CLIENT"
+                        label="NOM CLIENT"
                         variant="outlined"
-                        name="ID"
+                        name="NAME"
                         required
-                        onChange={(e) => setUserId(e.target.value)}
+                        onChange={(e) => setName(e.target.value)}
                       />
                       <Modules.TextField
                         style={{ width: "50%", margin: 20 }}
                         id="outlined-basic"
-                        label="BALANCE"
+                        label="EMAIL"
+                        type="EMAIL"
                         variant="outlined"
-                        name="BALANCE"
+                        name="EMAIL"
                         required
                         // type="password"
-                        onChange={(e) => setBalance(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                      <Modules.TextField
+                        style={{ width: "50%", margin: 20 }}
+                        id="outlined-basic"
+                        label="N°PHONE"
+                        variant="outlined"
+                        name="phone"
+                        required
+                        // type="password"
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                      <Modules.TextField
+                        style={{ width: "50%", margin: 20 }}
+                        id="outlined-basic"
+                        label="OTP"
+                        variant="outlined"
+                        name="password"
+                        type="password"
+                        required
+                        // type="password"
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
 
@@ -284,18 +387,31 @@ const handleSubmit = async (e) => {
                       <Modules.Button
                         type="submit"
                         variant="contained"
-                        style={{}}
+                        style={{backgroundColor:"blue", color:"white" ,fontSize:"30", fontWeight:"bold"}}
                         disabled={loading}
                         //  startIcon={<SaveIcon style={{ color: 'white' }} />}
                       >
-                        Enregistrer
+                        ENREGISTRER
                       </Modules.Button>
                       {loading && <Modules.Circular />}
                     </div>
                   </form>
+                 
+                  {/*/***********************  FORMULAIRE TRANSFERT ********************************/}
                 </Modules.Paper>
               </Modules.Grid>
-
+              <Modules.SnackbarComponent
+                {...props}
+                title="Titre"
+                message="OPERATION AFFECTUE"
+                open={openSnackbar}
+              />
+              <Modules.SnackbarComponent
+                {...props}
+                title="Titre"
+                message="SOLDE INSUFFISANT"
+                open={openBalanceInsuf}
+              />
               <Modules.ViewDialog
                 {...props}
                 title="Details Info clients"
@@ -303,7 +419,7 @@ const handleSubmit = async (e) => {
                 open={openAlert}
                 onClose={handleDialogClose}
                 details={details}
-              ></Modules.ViewDialog> 
+              ></Modules.ViewDialog>
             </Modules.Paper>
           </Modules.Grid>
           <Modules.Box pt={4}>

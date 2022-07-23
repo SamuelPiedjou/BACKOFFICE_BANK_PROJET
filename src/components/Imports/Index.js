@@ -103,7 +103,7 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import SearchIcon from "@material-ui/icons/Search";
-
+import excell from "../../assets/lotties/excell.json"
 import config from '../../config/Index';
 import Error from "../../pages/Error/Error";
 import Searchbar from "../../components/Searchbar/Searchbar";

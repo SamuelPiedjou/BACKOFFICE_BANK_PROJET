@@ -27,7 +27,7 @@ function ActivateDialog(props) {
   async function activeAccount(accountId) {
     try {
       const response = await Axios.put(
-        `http://192.168.0.148:8086/accounts/activeAcc/${ accountId}`,  
+        `http://172.21.253.133:8086/accounts/activeAcc/${ accountId}`,  
         {
           headers: {
             Accept: "application/json",

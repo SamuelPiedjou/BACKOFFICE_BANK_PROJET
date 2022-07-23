@@ -18,7 +18,7 @@ import Lottie from "react-lottie";
 import logo from "../../assets/lotties/logo.json";
 import { TrainRounded, TrendingUpRounded } from "@material-ui/icons";
 // 143670816
-export default function NewTransaction(props) {
+export default function UpdateClient(props) {
   const classes = useStylesTheme();
   const [open, setOpen] = Modules.React.useState(false);
   const [openAlert, setOpenAlert] = Modules.React.useState(false);
@@ -29,11 +29,21 @@ export default function NewTransaction(props) {
   const [page, setPage] = Modules.React.useState(0);
   const [rowsPerPage, setRowsPerPage] = Modules.React.useState(10);
   const [details, setDetails] = Modules.React.useState("");
-  const [accountId, setAccountId] = Modules.React.useState();
-  const [accountIdBenef, setAccountIdBenef] = Modules.React.useState();
+  const [name, setName] = Modules.React.useState();
+  const [password, setPassword] = Modules.React.useState();
   const [accountType, setAccountType] = Modules.React.useState();
-  const [balance, setBalance] = Modules.React.useState();
-  const [reason, setReason] = Modules.React.useState();
+  const [email, setEmail] = Modules.React.useState();
+  const [phone, setPhone] = Modules.React.useState();
+  
+  const [user, setUser] = Modules.React.useState(JSON.parse(localStorage.getItem('userDetails')));
+
+
+  const [dateNaiss, setDateNaiss] = Modules.React.useState();
+  const [endDate, setEndDate] = Modules.React.useState();
+  const [genre, setGenre] = Modules.React.useState();
+  const [newSelected2, setNewSelected2] = Modules.React.useState([]);
+  const [openConfirmationDialog, setOpenConfirmationDialog] =
+    Modules.React.useState(false);
 
   const [openSnackbar, setOpenSnackbar] = Modules.React.useState(false);
   const [openBalanceInsuf, setOpenBalanceInsuf] = Modules.React.useState(false);
@@ -42,17 +52,29 @@ export default function NewTransaction(props) {
 
   const choice = accountType === "RETRAIT" ? "withdraw" : "deposit";
 
- console.log("N°COMPTE SENDER   "+accountId)
- console.log("N°COMPTE BENEF  "+accountIdBenef)
- console.log("BALANCE   "+balance)
+ 
+  console.log("ROW   " + user);
+
+
+  Modules.React.useEffect(async () => {
+      setDateNaiss(user.dateNaiss);
+      setGenre(user.genre);
+      setName(user.name);
+      setEmail(user.email);
+      setPhone(user.phone);
+      
+   }, []);
+
+
+
   async function newTransaction(data) {
     try {
       const response = await Axios.post(
         `${apiurl}/${choice}`,
         {
-          accountId: data.accountId,
-          balance: data.balance,
-          reason: data.reason,
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
         },
         {
           headers: {
@@ -68,15 +90,19 @@ export default function NewTransaction(props) {
       return Promise.reject(error);
     }
   }
-  async function newTransfert(data) {
+  async function createCustomer(data) {
     try {
-      const response = await Axios.post(
+      const response = await Axios.put(
         // `http://192.168.0.148:8086/accounts/transfer`,
-        `http://172.21.253.133:8086/accounts/transfer`,
+        `http://172.21.253.133:8086/customer/update/${user.userId}`,
+        // http://localhost:8086/customer/add
         {
-          amount: data.amount,
-          receiver: data.accountIdBenef,
-          sender: data.accountId,
+          birthday: data.dateNaiss,
+          customerName: data.name,
+          emailId: data.email,
+          gender: data.genre,
+          password:data.password,
+          phoneNo: data.phone,
         },
         {
           headers: {
@@ -94,61 +120,29 @@ export default function NewTransaction(props) {
   }
 
   const history = Modules.useHistory();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const usersData = await newTransaction({
-        accountId,
-        balance,
-        reason,
-      });
-      setLoading(false);
-      console.log(usersData.transactionStatus);
-
-      console.log("_______________________");
-      console.log(usersData.transactionStatus);
-      if (usersData.transactionStatus === "SUCCESSFUL") {
-        setOpenSnackbar(true);
-        const timer = setTimeout(() => {
-          history.push("/transactions");
-        }, 2000);
-        return () => {
-          clearTimeout(timer);
-        };
-      }
-    } catch (errors) {
-      if (errors.name === "Error") {
-        setLoading(false);
-        setErrorMessage(errors);
-        setShowError(true);
-      }
-    }
-  };
-   
   const handleTransfert = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const usersData = await newTransfert({
-        balance,
-        accountIdBenef,
-        accountId
+      const usersData = await createCustomer({
+        dateNaiss,
+        name,
+        email,
+        genre,
+        password,
+        phone,
+      
       });
-      setLoading(false);
-      console.log(usersData[0].transactionStatus);
-      if(usersData[0].transactionStatus ==="FAILED"){
-        setOpenBalanceInsuf(true);
-          
+      setLoading(false); 
+      if (usersData.userId != null) {
+        setOpenSnackbar(true);
       }
-      console.log("_______________________");
-      console.log(usersData.transactionStatus);
-      if (usersData.transactionStatus === "SUCCESSFUL") {
+      console.log(usersData.userId);
+      if (usersData.userId !==null) {
         setOpenSnackbar(true);
         const timer = setTimeout(() => {
-          history.push("/transactions");
+          history.push("/clients");
         }, 2000);
         return () => {
           clearTimeout(timer);
@@ -220,7 +214,7 @@ export default function NewTransaction(props) {
             noWrap
             className={classes.title}
           >
-            MENU TRANSACTION
+            MENU GESTION DES CLIENTS
           </Modules.Typography>
           {/*  <Modules.IconButton color="inherit">
              <Modules.Badge badgeContent={4} color="secondary">
@@ -260,10 +254,11 @@ export default function NewTransaction(props) {
         <Modules.Container maxWidth="lg" className={classes.container}>
           <Modules.Grid container spacing={3}>
             <Modules.Grid item xs={12}>
+              
               <Modules.Paper className={classes.paper} elevation={10}>
                 <Modules.BankBal color="primary" />
                 <Modules.Typography variant="h6">
-                  EFFECTUER UNE TRANSACTION
+                  MIS A JOUR D'UN CLIENT
                 </Modules.Typography>
               </Modules.Paper>
             </Modules.Grid>
@@ -272,38 +267,7 @@ export default function NewTransaction(props) {
             <Modules.Paper className={classes.paper} elevation={10}>
               <Modules.Grid item xs={12}>
                 <Modules.Paper className={classes.paper} elevation={10}>
-
-                <div>
-                      <Modules.FormControl
-                        variant="outlined"
-                        style={{ width: "97%", margin: 20 }}
-                        required
-                      >
-                        <Modules.InputLabel id="demo-simple-select-outlined-label">
-                          TYPE DE L'OPERATION
-                        </Modules.InputLabel>
-                        <Modules.Select
-                          labelId="demo-simple-select-outlined-label"
-                          id="demo-simple-select-outlined"
-                          name="accountType"
-                          value={accountType}
-                          onChange={(e) => setAccountType(e.target.value)}
-                          label="TYPE DE OPERATION"
-                        >
-                          <Modules.MenuItem value="deposit">
-                            DEPOT
-                          </Modules.MenuItem>
-                          <Modules.MenuItem value="withdraw">
-                            RETRAIT
-                          </Modules.MenuItem>
-                          <Modules.MenuItem value="transfer">
-                            COMPTE A COMPTE
-                          </Modules.MenuItem>
-                        </Modules.Select>
-                      </Modules.FormControl>
-                    </div>
-                    {console.log(accountType)}
-                  {accountType === "transfer" ? <form
+                  <form
                     autoComplete="off"
                     onSubmit={handleTransfert}
                     style={{ margin: 0 }}
@@ -316,10 +280,10 @@ export default function NewTransaction(props) {
                           color: "#fff",
                           padding: 10,
                           borderRadius: 10,
-                          margin: 20
+                          margin: 20,
                         }}
                       >
-                        EFFECTUER UN TRANSFERT INTRA BANCAIRE
+                        MIS A JOUR DU CLIENT 
                       </div>
                     </div>
                     <div
@@ -327,57 +291,52 @@ export default function NewTransaction(props) {
                         marginTop: 20,
                         display: "flex",
                         justifyContent: "space-between",
+                        flexDirection:"row", 
                       }}
                     >
-                      <Modules.TextField
-                        style={{ width: "50%", margin: 20 }}
-                        id="outlined-basic"
-                        label="N° COMPTE BANCAIRE EXPEDITEUR"
-                        variant="outlined"
-                        name="ID"
-                        required
-                        onChange={(e) => setAccountId(e.target.value)}
-                      />
-                      <Modules.TextField
-                        style={{ width: "50%", margin: 20 }}
-                        id="outlined-basic"
-                        label="N° COMPTE BANCAIRE EXPEDITEUR"
-                        variant="outlined"
-                        name="BI"
-                        required
-                        // type="password"
-                        onChange={(e) => setAccountIdBenef(e.target.value)}
-                      />
-                      <Modules.TextField
-                        style={{ width: "50%", margin: 20 }}
-                        id="outlined-basic"
-                        label="MONTANT"
-                        variant="outlined"
-                        name="MNT"
-                        required
-                        // type="password"
-                        onChange={(e) => setBalance(e.target.value)}
-                      />
-                    </div>
-
-                    <div style={{ position: "relative" }}>
-                      <Modules.Button
-                        type="submit"
-                        variant="contained"
-                        style={{}}
-                        disabled={loading}
-                        //  startIcon={<SaveIcon style={{ color: 'white' }} />}
-                      >
-                        VALIDER
-                      </Modules.Button>
-                      {loading && <Modules.Circular />}
-                    </div>
-                  </form>  : <form
-                    autoComplete="off"
-                    onSubmit={handleSubmit}
-                    style={{ margin: 0 }}
-                  >
-                    
+                      <div className={classes.form90} style={{width:'100%'}}>
+                        <Modules.TextField
+                          id="start"
+                          label="DATE NAiSSANCE"
+                          type="date" 
+                          value={dateNaiss}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          name="startDate"
+                          variant="outlined"
+                          required
+                          onChange={(e) => setDateNaiss(e.target.value)}
+                        />
+                         
+                        <Modules.FormControl
+                          variant="outlined"
+                          style={{
+                            width: "20%",
+                          }}
+                          required
+                        >
+                          <Modules.InputLabel id="demo-simple-select-outlined-label22">
+                            GENRE
+                          </Modules.InputLabel>
+                          <Modules.Select
+                            labelId="demo-simple-select-outlined-label22"
+                            id="genre"
+                            value={genre}
+                            label="GENRE"
+                            onChange={(e) => setGenre(e.target.value)}
+                          >
+                              <Modules.MenuItem value={"MALE"}>
+                                 MASCULIN
+                              </Modules.MenuItem>
+                              <Modules.MenuItem value={"FEMALE"}>
+                                 FEMININ
+                              </Modules.MenuItem>
+                          </Modules.Select>
+                        </Modules.FormControl>  
+                        <div style={{fontSize:20, color :"red"}}>ID DU CLIENT SELECTIONNE  {user.userId}</div>
+                      </div>
+                    </div> 
                     <div style={{ alignItems: "center" }}>
                       <div
                         style={{
@@ -386,9 +345,10 @@ export default function NewTransaction(props) {
                           color: "#fff",
                           padding: 10,
                           borderRadius: 10,
+                          margin:15
                         }}
                       >
-                        EFFECTUER UNE OPERATION
+                        2 étapes
                       </div>
                     </div>
                     <div
@@ -401,31 +361,46 @@ export default function NewTransaction(props) {
                       <Modules.TextField
                         style={{ width: "50%", margin: 20 }}
                         id="outlined-basic"
-                        label="N° COMPTE BANCAIRE"
+                        label="NOM CLIENT"
                         variant="outlined"
-                        name="ID"
+                        name="NAME"
+                        value={name}
                         required
-                        onChange={(e) => setAccountId(e.target.value)}
+                        onChange={(e) => setName(e.target.value)}
                       />
                       <Modules.TextField
                         style={{ width: "50%", margin: 20 }}
                         id="outlined-basic"
-                        label="BALANCE"
+                        label="EMAIL"
+                        type="EMAIL"
                         variant="outlined"
-                        name="BALANCE"
+                        name="EMAIL"
+                        value={email}
                         required
                         // type="password"
-                        onChange={(e) => setBalance(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                       <Modules.TextField
                         style={{ width: "50%", margin: 20 }}
                         id="outlined-basic"
-                        label="RAISON"
+                        label="N°PHONE"
                         variant="outlined"
-                        name="RAISON"
+                        name="phone"
+                        value={phone}
                         required
                         // type="password"
-                        onChange={(e) => setReason(e.target.value)}
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                      <Modules.TextField
+                        style={{ width: "50%", margin: 20 }}
+                        id="outlined-basic"
+                        label="RESET PASSWORD"
+                        variant="outlined"
+                        name="password"
+                        type="password"
+                        required
+                        // type="password"
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
 
@@ -433,29 +408,23 @@ export default function NewTransaction(props) {
                       <Modules.Button
                         type="submit"
                         variant="contained"
-                        style={{}}
+                        style={{backgroundColor:"blue", color:"white" ,fontSize:"30", fontWeight:"bold"}}
                         disabled={loading}
                         //  startIcon={<SaveIcon style={{ color: 'white' }} />}
                       >
-                        EFFECTUER
+                        ENREGISTRER
                       </Modules.Button>
                       {loading && <Modules.Circular />}
                     </div>
-                  </form>  
-                  
-                }
-
-                  
-
+                  </form>
+                 
                   {/*/***********************  FORMULAIRE TRANSFERT ********************************/}
-
-                  
                 </Modules.Paper>
               </Modules.Grid>
               <Modules.SnackbarComponent
                 {...props}
                 title="Titre"
-                message="OPERATION AFFECTUE"
+                message="OPERATION EFFECTUE"
                 open={openSnackbar}
               />
               <Modules.SnackbarComponent
